@@ -1,5 +1,6 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
@@ -27,7 +28,7 @@ public class Database {
 	    * @return The database Connection object
 	    * @throws SQLException
 	    */
-	   public static Connection getConnection() throws SQLException
+	   protected static Connection getConnection() throws SQLException
 	   {
 	      try
 	      {
@@ -43,4 +44,30 @@ public class Database {
 	      }
 	      return conn;
 	   }
+
+		/**
+		  Inserts a course into the database.
+		  @param course the course to be added (course id not needed)
+		 */
+		public static void insertCourse(Course course) throws SQLException
+		{
+			 PreparedStatement st = null;
+			 String sqlQuery =
+					   "INSERT INTO course_details "
+					 //+ "(title, description, course_link, start_date, duration, category, university, instructor) "
+					 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			 
+			 st = Database.getConnection().prepareStatement(sqlQuery);
+			 
+			 st.setInt(1, course.getId());
+			 st.setString(2, course.getTitle());
+			 st.setString(3, course.getDescription());
+			 st.setString(4, course.getCourseLink());
+			 st.setDate(5, course.getStartDate());
+			 st.setInt(6, course.getDuration());
+			 st.setString(7, course.getCategory());
+			 st.setString(8, course.getUniversity());
+			 st.setString(9, course.getInstructor());
+			 st.execute();		
+		}
 }

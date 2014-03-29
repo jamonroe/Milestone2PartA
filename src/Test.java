@@ -12,9 +12,9 @@ public class Test {
 		
 		Date date = new Date(System.currentTimeMillis());
 		 
-		Course newClass = new Course("Computer Science", "Computer sciency things will be taught.", "www.udacity.org", 
+		Course newClass = new Course(160, "Computer Science", "Computer sciency things will be taught.", "www.udacity.org", 
 				date, 7, "Computer Science", "Stanford", "Ronald MacDonald");
 		
-		Course.insertCourse(newClass);	
+		Database.insertCourse(newClass);	
 	}
 }

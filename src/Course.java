@@ -10,6 +10,7 @@ import java.sql.SQLException;
 
 public class Course {
 
+	private int id;
 	private String title;
 	private String description;
 	private String courseLink;
@@ -34,9 +35,10 @@ public class Course {
 	 * @param university the university which offers the course
 	 * @param instructor the instructor which teaches the course
 	 */
-	public Course(String title, String description,
+	public Course(int id, String title, String description,
 			String courseLink, Date startDate, int duration, String category,
 			String university, String instructor){
+		this.id = id;
 		this.title = title;
 		this.description = description;
 		this.courseLink = courseLink;
@@ -172,28 +174,11 @@ public class Course {
 		return instructor;
 	}
 	
-	/**
-	  Inserts a course into the database.
-	  @param course the course to be added (course id not needed)
-	 */
-	public static void insertCourse(Course course) throws SQLException
-	{
-		 PreparedStatement st = null;
-		 String sqlQuery =
-				   "INSERT INTO course_details "
-				 + "(title, description, course_link, start_date, duration, category, university, instructor) " //Do you need this part?
-				 + "values (?, ?, ?, ?, ?, ?, ?, ?)";
-		 
-		 st = Database.getConnection().prepareStatement(sqlQuery);
-		 
-		 st.setString(1, course.getTitle());
-		 st.setString(2, course.getDescription());
-		 st.setString(3, course.getCourseLink());
-		 st.setDate(4, course.getStartDate());
-		 st.setInt(5, course.getDuration());
-		 st.setString(6, course.getCategory());
-		 st.setString(7, course.getUniversity());
-		 st.setString(8, course.getInstructor());
-		 st.execute();		
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	public int getId() {
+		return id;
 	}
 }
