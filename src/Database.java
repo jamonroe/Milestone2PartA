@@ -23,8 +23,8 @@ public class Database {
 	   
 	   //  Database credentials
 	   static final String DATABASE = "coursecamp";
-	   static final String USER = "root";
-	   static final String PASS = "thn300.1";
+	   static final String USER = "demo";
+	   static final String PASS = "passwort";
 	   private static Connection conn = null;
 
 	   /**
@@ -95,8 +95,7 @@ public class Database {
 				query = Database.getConnection().prepareStatement("SELECT * FROM course_details");
 				ResultSet rs = query.executeQuery();
 				while(rs.next()) 
-				{int course_id = rs.getInt("course_id");
-				 String title = rs.getString("title");
+				{String title = rs.getString("title");
 				 String description = rs.getString("description");
 				 String course_link = rs.getString("course_link");
 				 Date start_date = rs.getDate("start_date");
@@ -105,8 +104,7 @@ public class Database {
 				 String university = rs.getString("university");
 				 String instructor = rs.getString("instructor");
 				 
-				returnString += "Course ID: " + course_id + "\n" 
-						+ "Title: " + title + "\n" 
+				returnString += "Title: " + title + "\n" 
 						+ "Description: " + description + "\n"
 						+ "Course Link: " + course_link + "\n"
 						+ "Start Date: " + start_date + "\n"
@@ -137,7 +135,6 @@ public class Database {
 			sb.append("<table border=\"1\" style=\"width:2000px\">");
 			
 			sb.append("<tr>");
-			sb.append("<td>Course ID</td>");
 			sb.append("<td>Title</td>");
 			sb.append("<td>Description</td>");
 			sb.append("<td>Course Link</td>");
@@ -154,8 +151,7 @@ public class Database {
 				query = Database.getConnection().prepareStatement("SELECT * FROM course_details");
 				ResultSet rs = query.executeQuery();
 				while(rs.next()) 
-				{int course_id = rs.getInt("course_id");
-				 String title = rs.getString("title");
+				{String title = rs.getString("title");
 				 String description = rs.getString("description");
 				 String course_link = rs.getString("course_link");
 				 Date start_date = rs.getDate("start_date");
@@ -165,7 +161,6 @@ public class Database {
 				 String instructor = rs.getString("instructor");
 				 
 				 sb.append("<tr>");
-				 sb.append("<td>" + course_id + "</td>");
 				 sb.append("<td>" + title + "</td>");
 				 sb.append("<td>" + description + "</td>");
 				 sb.append("<td>" + course_link + "</td>");
