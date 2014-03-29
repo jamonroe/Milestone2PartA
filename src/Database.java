@@ -57,23 +57,23 @@ public class Database {
 			 PreparedStatement st = null;
 			 String sqlQuery =
 					   "INSERT INTO course_details "
-					 //+ "(course_id, title, description, course_link, start_date, duration, category, university, instructor) "
-					 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+					 + "(title, description, course_link, start_date, duration, category, university, instructor) "
+					 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 			 try {
 				 st = Database.getConnection().prepareStatement(sqlQuery);
 			 } catch (Exception e) {
 				 e.printStackTrace();
 				 return;
 			 }
-			 st.setInt(1, course.getCourseId());
-			 st.setString(2, course.getTitle());
-			 st.setString(3, course.getDescription());
-			 st.setString(4, course.getCourseLink());
-			 st.setDate(5, course.getStartDate());
-			 st.setInt(6, course.getDuration());
-			 st.setString(7, course.getCategory());
-			 st.setString(8, course.getUniversity());
-			 st.setString(9, course.getInstructor());
+
+			 st.setString(1, course.getTitle());
+			 st.setString(2, course.getDescription());
+			 st.setString(3, course.getCourseLink());
+			 st.setDate(4, course.getStartDate());
+			 st.setInt(5, course.getDuration());
+			 st.setString(6, course.getCategory());
+			 st.setString(7, course.getUniversity());
+			 st.setString(8, course.getInstructor());
 			 st.execute();		
 		}
 		
