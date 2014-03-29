@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 public class Course {
 
-	private int id;
+	private int courseId;
 	private String title;
 	private String description;
 	private String courseLink;
@@ -22,9 +22,9 @@ public class Course {
 	// Course image?
 	
 	/**
-	 * Constructs a course object. For the DB, the course_id is omitted in
+	 * Constructs a course object. For the DB, the course_courseId is omitted in
 	 * the construction of the object since the DB will automatically create
-	 * a course ID for each course added.
+	 * a course courseId for each course added.
 	 * 
 	 * @param title the title of the course
 	 * @param description the course description
@@ -35,10 +35,10 @@ public class Course {
 	 * @param university the university which offers the course
 	 * @param instructor the instructor which teaches the course
 	 */
-	public Course(int id, String title, String description,
+	public Course(int courseId, String title, String description,
 			String courseLink, Date startDate, int duration, String category,
 			String university, String instructor){
-		this.id = id;
+		this.courseId = courseId;
 		this.title = title;
 		this.description = description;
 		this.courseLink = courseLink;
@@ -174,11 +174,11 @@ public class Course {
 		return instructor;
 	}
 	
-	public void setId(int id) {
-		this.id = id;
+	public void setCourseId(int courseId) {
+		this.courseId = courseId;
 	}
 	
-	public int getId() {
-		return id;
+	public int getCourseId() {
+		return courseId;
 	}
 }

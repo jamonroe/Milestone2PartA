@@ -14,7 +14,9 @@ public class Test {
 		 
 		Course newClass = new Course(160, "Computer Science", "Computer sciency things will be taught.", "www.udacity.org", 
 				date, 7, "Computer Science", "Stanford", "Ronald MacDonald");
-		
-		Database.insertCourse(newClass);	
+
+		Database.clearTable();
+		Database.insertCourse(newClass);
+		Database.close();
 	}
 }

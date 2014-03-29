@@ -27,8 +27,9 @@ public class Database {
 	    * 
 	    * @return The database Connection object
 	    * @throws SQLException
+	    * @throws ClassNotFoundException 
 	    */
-	   protected static Connection getConnection() throws SQLException
+	   protected static Connection getConnection() throws SQLException, ClassNotFoundException
 	   {
 	      try
 	      {
@@ -41,6 +42,8 @@ public class Database {
 	      catch(ClassNotFoundException e)
 	      {
 	    	  System.out.println("Error with JDBC Driver!");
+	    	  System.out.println("You likely need to add the MySQL JDBC Connector jar to the build path");
+	    	  throw e;
 	      }
 	      return conn;
 	   }
@@ -54,12 +57,15 @@ public class Database {
 			 PreparedStatement st = null;
 			 String sqlQuery =
 					   "INSERT INTO course_details "
-					 //+ "(title, description, course_link, start_date, duration, category, university, instructor) "
+					 //+ "(course_id, title, description, course_link, start_date, duration, category, university, instructor) "
 					 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-			 
-			 st = Database.getConnection().prepareStatement(sqlQuery);
-			 
-			 st.setInt(1, course.getId());
+			 try {
+				 st = Database.getConnection().prepareStatement(sqlQuery);
+			 } catch (Exception e) {
+				 e.printStackTrace();
+				 return;
+			 }
+			 st.setInt(1, course.getCourseId());
 			 st.setString(2, course.getTitle());
 			 st.setString(3, course.getDescription());
 			 st.setString(4, course.getCourseLink());
@@ -69,5 +75,33 @@ public class Database {
 			 st.setString(8, course.getUniversity());
 			 st.setString(9, course.getInstructor());
 			 st.execute();		
+		}
+		
+		/**
+		  Clears the entire table.
+		 */
+		public static void clearTable() throws SQLException
+		{
+			 PreparedStatement st = null;
+			 String sqlStatement = "DELETE FROM course_details WHERE course_id > -1";
+			 try {
+				 st = Database.getConnection().prepareStatement(sqlStatement);
+			 } catch (Exception e) {
+				 e.printStackTrace();
+				 return;
+			 }
+			 st.execute();		
+		}
+		
+		/**
+		 * Closes the connection.
+		 */
+		public static void close() throws SQLException
+		{
+			try {
+				Database.getConnection().close();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
 		}
 }
