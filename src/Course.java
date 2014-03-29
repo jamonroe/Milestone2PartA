@@ -47,6 +47,11 @@ public class Course {
 		this.instructor = instructor;
 	}
 	
+	public Course() {
+		// empty constructor in order to add data to a course incrementally in other classes
+		
+	}
+	
 	/**
 	  Sets the title of the course.
 	  @param newTitle the title to be added
