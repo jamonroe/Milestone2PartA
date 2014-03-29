@@ -180,8 +180,9 @@ public class Course {
 	{
 		 PreparedStatement st = null;
 		 String sqlQuery =
-				   "INSERT INTO course_details (title, description, "
-				   + "course_link, start_date, duration, category, university, instructor) values (?, ?, ?, ?, ?, ?, ?, ?)";
+				   "INSERT INTO course_details "
+				 + "(title, description, course_link, start_date, duration, category, university, instructor) " //Do you need this part?
+				 + "values (?, ?, ?, ?, ?, ?, ?, ?)";
 		 
 		 st = Database.getConnection().prepareStatement(sqlQuery);
 		 
