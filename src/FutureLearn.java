@@ -97,7 +97,9 @@ public class FutureLearn {
 			Elements edu = course_page.select("div[class=course-educators clearfix]");
 			Elements ed = edu.select("div[class=small]");
 			Elements teachers = ed.select("a");
-			String instructor = teachers.get(i).text();
+			String instructor = "";
+			if (i < teachers.size())
+				instructor = teachers.get(i).text();
 			new_course.setInstructor(instructor);
 
 			// Scrape course title from h2 heading on original HTML page
@@ -113,7 +115,8 @@ public class FutureLearn {
 			// Scrape start date and duration of course from original HTML page
 			String startDate = "";
 			String duration = "";
-
+			
+			if (i < dates.size())
 			if (dates.get(i).select("time").hasAttr("datetime")) {
 				Element date = dates.get(i);
 				String dateInfo = date.text();

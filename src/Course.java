@@ -35,6 +35,35 @@ public class Course {
 	 * @param university the university which offers the course
 	 * @param instructor the instructor which teaches the course
 	 */
+	public Course(String title, String description,
+			String courseLink, Date startDate, int duration, String category,
+			String university, String instructor){
+		this.courseId = 0;
+		this.title = title;
+		this.description = description;
+		this.courseLink = courseLink;
+		this.startDate = startDate;
+		this.duration = duration;
+		this.category = category;
+		this.university = university;
+		this.instructor = instructor;
+	}
+	
+	/**
+	 * Constructs a course object. For the DB, the course_courseId is omitted in
+	 * the construction of the object since the DB will automatically create
+	 * a course courseId for each course added.
+	 * 
+	 * @param courseId the table id
+	 * @param title the title of the course
+	 * @param description the course description
+	 * @param courseLink the link to the original course webpage
+	 * @param startDate the date the course begins
+	 * @param duration the duration of the course (in days)
+	 * @param category the category of the course, i.e., "computer science"
+	 * @param university the university which offers the course
+	 * @param instructor the instructor which teaches the course
+	 */
 	public Course(int courseId, String title, String description,
 			String courseLink, Date startDate, int duration, String category,
 			String university, String instructor){
