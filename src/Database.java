@@ -1,11 +1,17 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+
 
 /**
  * This class contains all the info to connect to the DB.
- * @author Christy
+ * @author Christy and Thinh
  */
 
 public class Database {
@@ -17,8 +23,8 @@ public class Database {
 	   
 	   //  Database credentials
 	   static final String DATABASE = "coursecamp";
-	   static final String USER = "demo";
-	   static final String PASS = "passwort";
+	   static final String USER = "root";
+	   static final String PASS = "thn300.1";
 	   private static Connection conn = null;
 
 	   /**
@@ -77,6 +83,113 @@ public class Database {
 			 st.execute();		
 		}
 		
+		/*
+		 * Print results from database.
+		 */
+		public static String printCourses() throws SQLException
+		{
+			PreparedStatement query = null;
+			String returnString = " ";
+			
+			try{
+				query = Database.getConnection().prepareStatement("SELECT * FROM course_details");
+				ResultSet rs = query.executeQuery();
+				while(rs.next()) 
+				{int course_id = rs.getInt("course_id");
+				 String title = rs.getString("title");
+				 String description = rs.getString("description");
+				 String course_link = rs.getString("course_link");
+				 Date start_date = rs.getDate("start_date");
+				 int duration = rs.getInt("duration");
+				 String category = rs.getString("category");
+				 String university = rs.getString("university");
+				 String instructor = rs.getString("instructor");
+				 
+				returnString += "Course ID: " + course_id + "\n" 
+						+ "Title: " + title + "\n" 
+						+ "Description: " + description + "\n"
+						+ "Course Link: " + course_link + "\n"
+						+ "Start Date: " + start_date + "\n"
+						+ "Duration: " + duration + "\n"
+						+ "Category: " + category + "\n"
+						+ "Univeristy: " + university + "\n"
+						+ "Instructor: " + instructor + "\n\n"; 
+				}
+			} catch (Exception e) {
+				 e.printStackTrace();
+				 return "";
+			}
+			
+			return returnString;		
+		}
+		
+		/*
+		 * Set data to html table.
+		 */
+		public static void toHtml() throws SQLException, IOException
+		{
+			StringBuilder sb = new StringBuilder();
+			sb.append("<html>");
+			sb.append("<body>");
+			
+			sb.append("<title>CourseCamp</title>");
+			
+			sb.append("<table border=\"1\" style=\"width:2000px\">");
+			
+			sb.append("<tr>");
+			sb.append("<td>Course ID</td>");
+			sb.append("<td>Title</td>");
+			sb.append("<td>Description</td>");
+			sb.append("<td>Course Link</td>");
+			sb.append("<td>Start Date</td>");
+			sb.append("<td>Duration</td>");
+			sb.append("<td>Category</td>");
+			sb.append("<td>University</td>");
+			sb.append("<td>Instructor</td>");
+			sb.append("</tr>");
+			
+			PreparedStatement query = null;
+			
+			try{
+				query = Database.getConnection().prepareStatement("SELECT * FROM course_details");
+				ResultSet rs = query.executeQuery();
+				while(rs.next()) 
+				{int course_id = rs.getInt("course_id");
+				 String title = rs.getString("title");
+				 String description = rs.getString("description");
+				 String course_link = rs.getString("course_link");
+				 Date start_date = rs.getDate("start_date");
+				 int duration = rs.getInt("duration");
+				 String category = rs.getString("category");
+				 String university = rs.getString("university");
+				 String instructor = rs.getString("instructor");
+				 
+				 sb.append("<tr>");
+				 sb.append("<td>" + course_id + "</td>");
+				 sb.append("<td>" + title + "</td>");
+				 sb.append("<td>" + description + "</td>");
+				 sb.append("<td>" + course_link + "</td>");
+				 sb.append("<td>" + start_date + "</td>");
+				 sb.append("<td>" + duration + "</td>");
+				 sb.append("<td>" + category + "</td>");
+				 sb.append("<td>" + university + "</td>");
+				 sb.append("<td>" + instructor + "</td>");
+				 sb.append("</tr>");
+				}
+			} catch (Exception e) {
+				 e.printStackTrace();
+				 return;
+			}
+			sb.append("</table>");
+			sb.append("</body>");
+			sb.append("</html>");
+			
+			FileWriter fstream = new FileWriter("coursecamp.html");
+			BufferedWriter out = new BufferedWriter(fstream);
+			out.write(sb.toString());
+			out.close();
+		}
+		
 		/**
 		  Clears the entire table.
 		 */
@@ -104,4 +217,5 @@ public class Database {
 				e.printStackTrace();
 			}
 		}
+		
 }
