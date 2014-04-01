@@ -212,29 +212,19 @@ public class Course {
 	}
 	
 	public void cleanseData() {
-		if (title != null)
-			title = title.replaceAll("&#39;", "'");
-		else
+		if (title == null)
 			title = "";
 		
-		if (description != null)
-			description = description.replaceAll("&#39;", "'");
-		else
+		if (description == null)
 			description = "";
 		
-		if (category != null)
-			category = category.replaceAll("&#39;", "'");
-		else
+		if (category == null)
 			category = "";
 		
-		if (university != null)
-			university = university.replaceAll("&#39;", "'");
-		else
+		if (university == null)
 			university = "";
 		
-		if (instructor != null)
-			instructor = instructor.replaceAll("&#39;", "'");
-		else
+		if (instructor == null)
 			instructor = "";
 	}
 	
