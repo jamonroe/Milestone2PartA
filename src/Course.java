@@ -10,6 +10,7 @@ import java.sql.SQLException;
 
 public class Course {
 
+	private int courseId;
 	private String title;
 	private String description;
 	private String courseLink;
@@ -21,9 +22,9 @@ public class Course {
 	// Course image?
 	
 	/**
-	 * Constructs a course object. For the DB, the course_id is omitted in
+	 * Constructs a course object. For the DB, the course_courseId is omitted in
 	 * the construction of the object since the DB will automatically create
-	 * a course ID for each course added.
+	 * a course courseId for each course added.
 	 * 
 	 * @param title the title of the course
 	 * @param description the course description
@@ -37,6 +38,7 @@ public class Course {
 	public Course(String title, String description,
 			String courseLink, Date startDate, int duration, String category,
 			String university, String instructor){
+		this.courseId = 0;
 		this.title = title;
 		this.description = description;
 		this.courseLink = courseLink;
@@ -45,6 +47,40 @@ public class Course {
 		this.category = category;
 		this.university = university;
 		this.instructor = instructor;
+	}
+	
+	/**
+	 * Constructs a course object. For the DB, the course_courseId is omitted in
+	 * the construction of the object since the DB will automatically create
+	 * a course courseId for each course added.
+	 * 
+	 * @param courseId the table id
+	 * @param title the title of the course
+	 * @param description the course description
+	 * @param courseLink the link to the original course webpage
+	 * @param startDate the date the course begins
+	 * @param duration the duration of the course (in days)
+	 * @param category the category of the course, i.e., "computer science"
+	 * @param university the university which offers the course
+	 * @param instructor the instructor which teaches the course
+	 */
+	public Course(int courseId, String title, String description,
+			String courseLink, Date startDate, int duration, String category,
+			String university, String instructor){
+		this.courseId = courseId;
+		this.title = title;
+		this.description = description;
+		this.courseLink = courseLink;
+		this.startDate = startDate;
+		this.duration = duration;
+		this.category = category;
+		this.university = university;
+		this.instructor = instructor;
+	}
+	
+	public Course() {
+		// empty constructor in order to add data to a course incrementally in other classes
+		
 	}
 	
 	/**
@@ -167,27 +203,11 @@ public class Course {
 		return instructor;
 	}
 	
-	/**
-	  Inserts a course into the database.
-	  @param course the course to be added (course id not needed)
-	 */
-	public static void insertCourse(Course course) throws SQLException
-	{
-		 PreparedStatement st = null;
-		 String sqlQuery =
-				   "INSERT INTO course_details (title, description, "
-				   + "course_link, start_date, duration, category, university, instructor) values (?, ?, ?, ?, ?, ?, ?, ?)";
-		 
-		 st = Database.getConnection().prepareStatement(sqlQuery);
-		 
-		 st.setString(1, course.getTitle());
-		 st.setString(2, course.getDescription());
-		 st.setString(3, course.getCourseLink());
-		 st.setDate(4, course.getStartDate());
-		 st.setInt(5, course.getDuration());
-		 st.setString(6, course.getCategory());
-		 st.setString(7, course.getUniversity());
-		 st.setString(8, course.getInstructor());
-		 st.execute();		
+	public void setCourseId(int courseId) {
+		this.courseId = courseId;
+	}
+	
+	public int getCourseId() {
+		return courseId;
 	}
 }
