@@ -87,6 +87,7 @@ public class FutureLearn {
 				}
 			}
 			
+			new_course.cleanseData();
 			courseList.add(new_course);
 			System.out.println(new_course);
 		}
