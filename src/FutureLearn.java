@@ -1,63 +1,23 @@
 import org.jsoup.*;
 
 import java.sql.Date;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import org.jsoup.nodes.*;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FutureLearn {
 
-	
-	public FutureLearn() { }
-	
 	@SuppressWarnings("deprecation")
-	private static Date convertDate(String date) {
+	public static void main(String[] args) throws IOException, SQLException {
 
-		String day = date.substring(0,2);
-		String month = date.substring(3);
-		int monthNum = 0;
-		switch (month) {
-			case "January": 	monthNum = 1;
-								break;
-			case "February": 	monthNum = 2;
-							 	break;
-			case "March":		monthNum = 3;
-								break;
-			case "April":		monthNum = 4;
-								break;
-			case "May":			monthNum = 5;
-								break;
-			case "June":		monthNum = 6;
-								break;
-			case "July":		monthNum = 7;
-								break;
-			case "August":		monthNum = 8;
-								break;
-			case "September":	monthNum = 9;
-								break;
-			case "October":		monthNum = 10;
-								break;
-			case "November":	monthNum = 11;
-								break;
-			case "December":	monthNum = 12;
-								break;
-			default:			monthNum = -1; 	
-								break;
-		}
-		int dayNum = Integer.parseInt(day);
-		
-		Date returnDate = new Date(2014, monthNum, dayNum);
-		
-		return returnDate;
-	}
-
-	@SuppressWarnings("deprecation")
-	public static void main(String[] args) throws IOException {
-
-		FutureLearn test = new FutureLearn();
 		ArrayList<Course> courseList = new ArrayList<Course>();
 
 		String futurelearn = "https://www.futurelearn.com/courses";
@@ -73,11 +33,9 @@ public class FutureLearn {
 		Elements h3 = header.select("h3[class=organisation headline headline-secondary]");
 		Elements section = div.select("section[class=media_description]");
 		Elements descriptions = section.select("p[class=introduction]");
-		Elements dates = div.select("dates[class=media_details clearfix]").select("span[class=media_attributes small]");
-
+		Elements dates = div.select("footer[class=media_details clearfix]").select("span[class=media_attributes small]");
 
 		Elements link = h2.select("[href]");
-
 
 		System.out.println("Printing fetched course links...");
 
@@ -87,76 +45,57 @@ public class FutureLearn {
 			// Scrape course URL
 			String course_url = "https://www.futurelearn.com" + link.get(i).attr("href");
 			new_course.setCourseLink(course_url);
-
-			// Scrape description out of Elements descriptions
+			
+			// Scrape university name from h3 heading on original HTML page
+			Element universityLink = h3.get(i).select("a").first();
+			String university = universityLink.text();
+			new_course.setUniversity(university);
+			
+			// Scrape description out of elements descriptions on original HTML page
 			String description = descriptions.get(i).text();
 			new_course.setDescription(description);
 
 			// Scrape instructor name from subsequent course page
 			Document course_page = Jsoup.connect(course_url).get();
-			Elements edu = course_page.select("div[class=course-educators clearfix]");
-			Elements ed = edu.select("div[class=small]");
-			Elements teachers = ed.select("a");
-			String instructor = "";
-			if (i < teachers.size())
-				instructor = teachers.get(i).text();
-			new_course.setInstructor(instructor);
-
-			// Scrape course title from h2 heading on original HTML page
+			Elements educator_list = course_page.select("div[class=course-educators clearfix]");
+			Elements educators = educator_list.select("div[class=small]");
+			Elements teachers = educators.select("a");
+			
+			String instructors = "";
+			for (int j = 0; j < teachers.size(); j++) {
+				instructors += teachers.get(j).text();
+				if (j != teachers.size() - 1)
+					instructors += ", ";
+			}
+			new_course.setInstructor(instructors);
+			
+			// Scrape course title from course details on course page
 			String course_title = h2.select("[title]").get(i).text();
 			new_course.setTitle(course_title);
 
-			// Scrape university name from h3 heading on original HTML page
-			Element universityLink = h3.get(i).select("a").first();
-			String university = universityLink.text();
-			System.out.println(university);
-			new_course.setUniversity(university);
-
-			// Scrape start date and duration of course from original HTML page
-			String startDate = "";
-			String duration = "";
-			
-			if (i < dates.size())
+			// Scrape start date and duration from course details on course page
 			if (dates.get(i).select("time").hasAttr("datetime")) {
 				Element date = dates.get(i);
-				String dateInfo = date.text();
-				int j = 0;
-				while (dateInfo.charAt(j) != ',') j++;
-				int k = j+1;
-				while (dateInfo.charAt(k) != ',') k++;
-				startDate = dateInfo.substring(0, j);
-				new_course.setStartDate(convertDate(startDate));
+				String dateInfo = date.select("time").attr("datetime");
 				
-				
-				duration = dateInfo.substring(j+2,k);
-				int durationLength = Integer.parseInt(duration.substring(0,3));
-				new_course.setDuration(durationLength);
-				
-				
-			}
-			else {
-				startDate = dates.get(i).text();
-				new_course.setStartDate(new Date(2014, 12, 1));
-				new_course.setDuration(-1);
+				new_course.setStartDate(Date.valueOf(dateInfo));
+				String[] components = date.text().split(",");
+				Pattern p = Pattern.compile("[0-9]+");
+				Matcher m = p.matcher(components[1]);
+				if (m.find()) {
+					new_course.setDuration(Integer.parseInt(m.group()));
+				}
 			}
 			
-			// FutureLearn does not categorize their courses
-			new_course.setCategory("null");
-
 			courseList.add(new_course);
+			System.out.println(new_course);
 		}
-		for (Course c : courseList) {
-			System.out.println(c.getTitle());
-			System.out.println(c.getUniversity());
-			System.out.println(c.getCategory());
-			System.out.println(c.getCourseLink());
-			System.out.println(c.getInstructor());
-			System.out.println(c.getDescription());
-			System.out.println(c.getStartDate());
-			System.out.println(c.getDuration());
-			System.out.println("======================");
-		}
-
+		/*
+		Database.clearTable();
+		for (Course c : courseList)
+			Database.insertCourse(c);
+		System.out.println(Database.printCourses());
+		Database.toHtml();
+		Database.close();*/
 	}
-
 }

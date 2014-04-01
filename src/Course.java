@@ -210,4 +210,43 @@ public class Course {
 	public int getCourseId() {
 		return courseId;
 	}
+	
+	public void cleanseData() {
+		if (title != null)
+			title = title.replaceAll("&#39;", "'");
+		else
+			title = "";
+		
+		if (description != null)
+			description = description.replaceAll("&#39;", "'");
+		else
+			description = "";
+		
+		if (category != null)
+			category = category.replaceAll("&#39;", "'");
+		else
+			category = "";
+		
+		if (university != null)
+			university = university.replaceAll("&#39;", "'");
+		else
+			university = "";
+		
+		if (instructor != null)
+			instructor = instructor.replaceAll("&#39;", "'");
+		else
+			instructor = "";
+	}
+	
+	public String toString() {
+		String result = "Title: " + title + "\n";
+		result += "University: " + university + "\n";
+		result += "Instructor: " + instructor + "\n";
+		result += "Course Link: " + courseLink + "\n";
+		result += "Start Date: " + startDate + "\n";
+		result += "Duration: " + duration + "\n";
+		result += "Category: " + category + "\n";
+		result += "Description: " + description + "\n";
+		return result;
+	}
 }
