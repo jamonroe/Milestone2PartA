@@ -244,7 +244,7 @@ public class Course {
 		result += "Instructor: " + instructor + "\n";
 		result += "Course Link: " + courseLink + "\n";
 		result += "Start Date: " + startDate + "\n";
-		result += "Duration: " + duration + "\n";
+		result += "Duration: " + duration + " Weeks\n";
 		result += "Category: " + category + "\n";
 		result += "Description: " + description + "\n";
 		return result;
