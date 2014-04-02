@@ -1,7 +1,4 @@
 import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  * This program models a course object, which holds all of its descriptive information.
@@ -30,7 +27,7 @@ public class Course {
 	 * @param description the course description
 	 * @param courseLink the link to the original course webpage
 	 * @param startDate the date the course begins
-	 * @param duration the duration of the course (in days)
+	 * @param duration the duration of the course (in weeks)
 	 * @param category the category of the course, i.e., "computer science"
 	 * @param university the university which offers the course
 	 * @param instructor the instructor which teaches the course
@@ -59,7 +56,7 @@ public class Course {
 	 * @param description the course description
 	 * @param courseLink the link to the original course webpage
 	 * @param startDate the date the course begins
-	 * @param duration the duration of the course (in days)
+	 * @param duration the duration of the course (in weeks)
 	 * @param category the category of the course, i.e., "computer science"
 	 * @param university the university which offers the course
 	 * @param instructor the instructor which teaches the course
@@ -144,8 +141,8 @@ public class Course {
 	}
 	
 	/**
-	  Sets the duration of the course (in days).
-	  @param newDuration the number of days the course lasts
+	  Sets the duration of the course (in weeks).
+	  @param newDuration the number of weeks the course lasts
 	 */
 	public void setDuration(int newDuration){
 		duration = newDuration;
@@ -203,14 +200,24 @@ public class Course {
 		return instructor;
 	}
 	
+	/**
+	  Sets the course ID
+	  @param courseId the id
+	 */
 	public void setCourseId(int courseId) {
 		this.courseId = courseId;
 	}
 	
+	/**
+	  @return the course ID
+	 */
 	public int getCourseId() {
 		return courseId;
 	}
 	
+	/**
+	  Reverts important values back to null.
+	 */
 	public void cleanseData() {
 		if (title == null)
 			title = "";
@@ -228,6 +235,9 @@ public class Course {
 			instructor = "";
 	}
 	
+	/**
+	 * Displays the course as a list of its components.
+	 */
 	public String toString() {
 		String result = "Title: " + title + "\n";
 		result += "University: " + university + "\n";
