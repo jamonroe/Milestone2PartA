@@ -8,5 +8,8 @@
 	<classpathentry kind="lib" path="ext/commons-io-2.4.jar"/>
 	<classpathentry kind="lib" path="ext/jsoup-1.7.3.jar"/>
 	<classpathentry kind="lib" path="ext/mysql-connector-java-5.1.29-bin.jar"/>
+	<classpathentry kind="lib" path="ext/gson-2.2.4-javadoc.jar"/>
+	<classpathentry kind="lib" path="ext/gson-2.2.4-sources.jar"/>
+	<classpathentry kind="lib" path="ext/gson-2.2.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
