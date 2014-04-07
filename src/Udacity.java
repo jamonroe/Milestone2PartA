@@ -13,12 +13,12 @@ import java.util.regex.Pattern;
 public class Udacity {
 	
 	public static void main(String[] args) {
-		ArrayList<String> urls = fetchURLs();
-		//for (String s : urls)
-			//System.out.println(s);
+		Set urls = fetchURLs();
+		for (Object s : urls)
+			System.out.println(s);
 	}
 	
-	public static ArrayList<String> fetchURLs() {
+	public static Set fetchURLs() {
 		URL url;
 	    InputStream is = null;
 
@@ -32,27 +32,13 @@ public class Udacity {
 	        Matcher m = p.matcher(index);
 	        
 	    	Gson gson = new Gson();
-	        printMap((Map)gson.fromJson(index, Object.class));
-	        
+	        Map map = (Map)((Map)gson.fromJson(index, Map.class).get("references")).get("Node");
+	        Set set = map.keySet();
+
+	        return set;
 	    } catch (Exception e) {
 	    	e.printStackTrace();
 	    }
 	    return null;
-	}
-	
-	public static void printMap(Map m) {
-		if (m == null) return;
-		Set s = m.keySet();
-		Object val;
-		for (Object key : s) {
-			val = m.get(key);
-			if (val instanceof Map) {
-				System.out.println(key + ":\n{");
-				printMap((Map) val);
-				System.out.println("}");
-			}
-			else
-				System.out.println(key + ": " + val);
-		}
 	}
 }
