@@ -1,9 +1,6 @@
 import org.jsoup.*;
 
 import java.sql.Date;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import org.jsoup.nodes.*;
 import org.jsoup.select.Elements;
@@ -15,16 +12,23 @@ import java.util.regex.Pattern;
 
 public class FutureLearn {
 
-	@SuppressWarnings("deprecation")
-	public static void main(String[] args) throws IOException, SQLException {
+	public static String URL = "https://www.futurelearn.com";
+	public static String courseURL = "https://www.futurelearn.com/courses";
+	
+	public static void main(String[] args) {
+		fetchCourses();
+	}
+	
+	public static ArrayList<Course> fetchCourses() {
 
 		ArrayList<Course> courseList = new ArrayList<Course>();
-
-		String futurelearn = "https://www.futurelearn.com/courses";
-
-		System.out.println("Attempting to fetch course links from source: " + futurelearn);
-
-		Document doc = Jsoup.connect(futurelearn).get();
+		Document doc;
+		try {
+			doc = Jsoup.connect(courseURL).get();
+		} catch (IOException e) {
+			System.out.println("Could not connect to: " + URL);
+			return courseList;
+		}
 		Elements ele = doc.select("ul[class=list course-index]");
 		Elements li = ele.select("li[class=media media-large clearfix]");
 		Elements div = li.select("div[class=media_body]");
@@ -36,15 +40,13 @@ public class FutureLearn {
 		Elements dates = div.select("footer[class=media_details clearfix]").select("span[class=media_attributes small]");
 
 		Elements link = h2.select("[href]");
-
-		System.out.println("Printing fetched course links...");
-
+		
 		for (int i = 0; i < link.size(); i++) {
 			Course new_course = new Course();
 
 			// Scrape course URL
-			String course_url = "https://www.futurelearn.com" + link.get(i).attr("href");
-			new_course.setCourseLink(course_url);
+			String course_link = URL + link.get(i).attr("href");
+			new_course.setCourseLink(course_link);
 			
 			// Scrape university name from h3 heading on original HTML page
 			Element universityLink = h3.get(i).select("a").first();
@@ -56,7 +58,13 @@ public class FutureLearn {
 			new_course.setDescription(description);
 
 			// Scrape instructor name from subsequent course page
-			Document course_page = Jsoup.connect(course_url).get();
+			Document course_page;
+			try {
+				course_page = Jsoup.connect(course_link).get();
+			} catch (IOException e) {
+				System.out.println("Could not connect to: " + course_link);
+				continue;
+			}
 			Elements educator_list = course_page.select("div[class=course-educators clearfix]");
 			Elements educators = educator_list.select("div[class=small]");
 			Elements teachers = educators.select("a");
@@ -91,12 +99,6 @@ public class FutureLearn {
 			courseList.add(new_course);
 			System.out.println(new_course);
 		}
-		/*
-		Database.clearTable();
-		for (Course c : courseList)
-			Database.insertCourse(c);
-		System.out.println(Database.printCourses());
-		Database.toHtml();
-		Database.close();*/
+		return courseList;
 	}
 }
