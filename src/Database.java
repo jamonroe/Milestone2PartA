@@ -96,7 +96,7 @@ public class Database {
 				ResultSet rs = query.executeQuery();
 				while(rs.next()) 
 				{String title = rs.getString("title");
-				 String description = rs.getString("description").substring(0, 30) + "...";
+				 String description = rs.getString("description");
 				 String course_link = rs.getString("course_link");
 				 Date start_date = rs.getDate("start_date");
 				 int duration = rs.getInt("duration");
@@ -136,12 +136,12 @@ public class Database {
 			
 			sb.append("<tr>");
 			sb.append("<td>Title</td>");
-			sb.append("<td>Description</td>");
-			sb.append("<td>Course Link</td>");
 			sb.append("<td>Start Date</td>");
 			sb.append("<td>Duration</td>");
 			sb.append("<td>University</td>");
 			sb.append("<td>Instructor</td>");
+			sb.append("<td>Description</td>");
+			sb.append("<td>Course Link</td>");
 			sb.append("<td>Course Image</td>");
 			sb.append("</tr>");
 			
@@ -152,7 +152,7 @@ public class Database {
 				ResultSet rs = query.executeQuery();
 				while(rs.next()) 
 				{String title = rs.getString("title");
-				 String description = rs.getString("description");
+				 String description = rs.getString("description").substring(0, 30) + "...";
 				 String course_link = rs.getString("course_link");
 				 String start_date = rs.getString("start_date");
 				 int duration = rs.getInt("duration");
