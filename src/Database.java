@@ -63,7 +63,7 @@ public class Database {
 			 PreparedStatement st = null;
 			 String sqlQuery =
 					   "INSERT INTO course_details "
-					 + "(title, description, course_link, start_date, duration, category, university, instructor) "
+					 + "(title, description, course_link, start_date, duration, university, instructor, course_image) "
 					 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 			 try {
 				 st = Database.getConnection().prepareStatement(sqlQuery);
@@ -75,11 +75,11 @@ public class Database {
 			 st.setString(1, course.getTitle());
 			 st.setString(2, course.getDescription());
 			 st.setString(3, course.getCourseLink());
-			 st.setDate(4, course.getStartDate());
+			 st.setString(4, course.getStartDate());
 			 st.setInt(5, course.getDuration());
-			 st.setString(6, course.getCategory());
-			 st.setString(7, course.getUniversity());
-			 st.setString(8, course.getInstructor());
+			 st.setString(6, course.getUniversity());
+			 st.setString(7, course.getInstructor());
+			 st.setString(8, course.getImage());
 			 st.execute();		
 		}
 		
@@ -96,7 +96,7 @@ public class Database {
 				ResultSet rs = query.executeQuery();
 				while(rs.next()) 
 				{String title = rs.getString("title");
-				 String description = rs.getString("description");
+				 String description = rs.getString("description").substring(0, 30) + "...";
 				 String course_link = rs.getString("course_link");
 				 Date start_date = rs.getDate("start_date");
 				 int duration = rs.getInt("duration");
@@ -140,9 +140,9 @@ public class Database {
 			sb.append("<td>Course Link</td>");
 			sb.append("<td>Start Date</td>");
 			sb.append("<td>Duration</td>");
-			sb.append("<td>Category</td>");
 			sb.append("<td>University</td>");
 			sb.append("<td>Instructor</td>");
+			sb.append("<td>Course Image</td>");
 			sb.append("</tr>");
 			
 			PreparedStatement query = null;
@@ -154,21 +154,21 @@ public class Database {
 				{String title = rs.getString("title");
 				 String description = rs.getString("description");
 				 String course_link = rs.getString("course_link");
-				 Date start_date = rs.getDate("start_date");
+				 String start_date = rs.getString("start_date");
 				 int duration = rs.getInt("duration");
-				 String category = rs.getString("category");
 				 String university = rs.getString("university");
 				 String instructor = rs.getString("instructor");
+				 String course_image = rs.getString("course_image");
 				 
 				 sb.append("<tr>");
 				 sb.append("<td>" + title + "</td>");
-				 sb.append("<td>" + description + "</td>");
-				 sb.append("<td>" + course_link + "</td>");
 				 sb.append("<td>" + start_date + "</td>");
 				 sb.append("<td>" + duration + "</td>");
-				 sb.append("<td>" + category + "</td>");
 				 sb.append("<td>" + university + "</td>");
 				 sb.append("<td>" + instructor + "</td>");
+				 sb.append("<td>" + description + "</td>");
+				 sb.append("<td>" + course_link + "</td>");
+				 sb.append("<td>" + course_image + "</td>");
 				 sb.append("</tr>");
 				}
 			} catch (Exception e) {

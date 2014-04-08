@@ -11,14 +11,14 @@ USE `coursecamp` ;
 CREATE TABLE IF NOT EXISTS `coursecamp`.`course_details` (
   `course_id` INT(11) NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(250) NOT NULL,
-  `description` TEXT NOT NULL,
-  `course_link` TEXT NOT NULL,
-  `start_date` VARCHAR(250) NOT NULL,
-  `duration` INT(11) NOT NULL,
-  `university` VARCHAR(250) NOT NULL,
-  `instructor` VARCHAR(250) NOT NULL,
-  `course_image` TEXT NOT NULL,
-  PRIMARY KEY (`course_id`, `title`, `university`, `instructor`))
+  `description` TEXT,
+  `course_link` TEXT,
+  `start_date` VARCHAR(250),
+  `duration` INT(11),
+  `university` VARCHAR(250),
+  `instructor` VARCHAR(250),
+  `course_image` TEXT,
+  PRIMARY KEY (`course_id`, `title`))
 ENGINE = InnoDB;
 
 

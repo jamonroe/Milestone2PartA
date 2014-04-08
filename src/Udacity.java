@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -26,21 +27,20 @@ public class Udacity {
 	}
 	
 	public static ArrayList<Course> fetchCourses() {
-		ArrayList<Course> courseList = new ArrayList<Course>();
-		Set<String> urls = fetchURLs();
-		Course course;
-		for (Object s : urls) {
+		ArrayList<Course> courseList = initializeCourses();
+		Iterator<Course> iterator = courseList.iterator();
+		
+		while (iterator.hasNext()) {
+			Course course = iterator.next();
 			Document doc;
 			try {
-				doc = Jsoup.connect(courseURL + s).get();
+				doc = Jsoup.connect(course.getCourseLink()).get();
 			} catch (Exception e) {
-				System.out.println("Could not connect to " + courseURL + s);
+				System.out.println("Could not connect to " + courseURL + course.getCourseLink());
+				iterator.remove();
 				continue;
 			}
 			
-			course = new Course();
-			course.setCourseLink(courseURL + s);
-
 			// Fetch title.
 			Elements title = doc.select("title");
 			course.setTitle(title.text().replaceAll(" - Udacity", ""));
@@ -87,7 +87,7 @@ public class Udacity {
 			// Fetch category.  
 			// Using the "Tracks" they have.  "Data Science Track" "Web Development Track"
 			// <!-- Course Info Bar -->
-			Elements courseInfoBar = doc.select("div[class=row course-info-bar row-gap-medium]");
+			/* Elements courseInfoBar = doc.select("div[class=row course-info-bar row-gap-medium]");
 			Elements tracks = courseInfoBar.select("div[class=col-md-10]");
 			Elements trackLinks = tracks.select("a");
 			String category = "", comma = "";
@@ -95,21 +95,20 @@ public class Udacity {
 				category += comma + e.text();
 				comma = ", ";
 			}
-			course.setCategory(category.replaceAll(" Track", ""));
+			course.setCategory(category.replaceAll(" Track", "")); */
 
 			// TODO Fetch startDate.  They all seem to be self paced courses.
 
 			course.cleanseData();
-			courseList.add(course);
 			System.out.println(course);
 		}
 		return courseList;
 	}
 	
-	public static Set<String> fetchURLs() {
+	public static ArrayList<Course> initializeCourses() {
 		URL url;
 	    InputStream is = null;
-
+	    ArrayList<Course> courseList = new ArrayList<Course>();
 	    try {
 	        url = new URL(JSON_URL);
 
@@ -122,8 +121,26 @@ public class Udacity {
 	    	Gson gson = new Gson();
 	        Map<String, Object> map = (Map)((Map)gson.fromJson(index, Map.class).get("references")).get("Node");
 	        Set<String> set = map.keySet();
-
-	        return set;
+	        
+	        Course course;
+	        String image;
+	        for (String s : set) {
+		        course = new Course();
+		        
+		        // Set the course link
+				course.setCourseLink(courseURL + s);
+				
+				// Get the image from the object
+				try {
+					image = (String)((Map)((Map)((Map)map.get(s)).get("catalog_entry")).get("_image")).get("serving_url");
+					course.setImage(image);
+				} catch (Exception e) {
+					// Do nothing
+				}
+				
+				courseList.add(course);
+	        }
+	        return courseList;
 	    } catch (Exception e) {
 	    	e.printStackTrace();
 	    }

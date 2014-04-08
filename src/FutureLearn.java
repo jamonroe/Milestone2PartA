@@ -57,6 +57,10 @@ public class FutureLearn {
 			String description = descriptions.get(i).text();
 			new_course.setDescription(description);
 
+			// Scrape image out of course index on original HTML page
+			String image = ele.select("img").get(i).attr("src");
+			new_course.setImage(image);
+			
 			// Scrape instructor name from subsequent course page
 			Document course_page;
 			try {
@@ -86,7 +90,7 @@ public class FutureLearn {
 				Element date = dates.get(i);
 				String dateInfo = date.select("time").attr("datetime");
 				
-				new_course.setStartDate(Date.valueOf(dateInfo));
+				new_course.setStartDate(dateInfo);
 				String[] components = date.text().split(",");
 				Pattern p = Pattern.compile("[0-9]+");
 				Matcher m = p.matcher(components[1]);

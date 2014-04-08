@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * This program creates a course object and tests that it can be added to the DB.
@@ -11,18 +12,16 @@ public class Test {
 
 	public static void main(String[] args) throws SQLException, IOException {
 		
-		Date date = new Date(System.currentTimeMillis());
-		 
-		Course class1 = new Course("Computer Science", "Computer sciency things will be taught.", "www.udacity.org", 
-				date, 7, "Computer Science", "Stanford", "Ronald MacDonald");
+		ArrayList<Course> udacity = Udacity.fetchCourses();
+		ArrayList<Course> futurelearn = FutureLearn.fetchCourses();
 		
-		Course class2 = new Course("Statistics", "Probability will be taught.", "www.futurelearn.com", 
-				date, 5, "Math", "UC Berkeley", "Mathew Goodies");
-
 		Database.clearTable();
-		Database.insertCourse(class1);
-		Database.insertCourse(class2);
-		System.out.println(Database.printCourses());
+
+		for (Course c : udacity)
+			Database.insertCourse(c);
+		for (Course c : futurelearn)
+			Database.insertCourse(c);
+		
 		Database.toHtml();
 		Database.close();
 

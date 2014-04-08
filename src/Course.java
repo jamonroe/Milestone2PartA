@@ -1,5 +1,3 @@
-import java.sql.Date;
-
 /**
  * This program models a course object, which holds all of its descriptive information.
  * @author: Christy
@@ -11,12 +9,11 @@ public class Course {
 	private String title;
 	private String description;
 	private String courseLink;
-	private Date startDate;
+	private String startDate;
 	private int duration;
-	private String category;
 	private String university;
 	private String instructor;
-	// Course image?
+	private String image;
 	
 	/**
 	 * Constructs a course object. For the DB, the course_courseId is omitted in
@@ -26,24 +23,24 @@ public class Course {
 	 * @param title the title of the course
 	 * @param description the course description
 	 * @param courseLink the link to the original course webpage
-	 * @param startDate the date the course begins
+	 * @param startDate the String the course begins
 	 * @param duration the duration of the course (in weeks)
-	 * @param category the category of the course, i.e., "computer science"
 	 * @param university the university which offers the course
 	 * @param instructor the instructor which teaches the course
+	 * @param image the image url for the course
 	 */
 	public Course(String title, String description,
-			String courseLink, Date startDate, int duration, String category,
-			String university, String instructor){
+			String courseLink, String startDate, int duration,
+			String university, String instructor, String image){
 		this.courseId = 0;
 		this.title = title;
 		this.description = description;
 		this.courseLink = courseLink;
 		this.startDate = startDate;
 		this.duration = duration;
-		this.category = category;
 		this.university = university;
 		this.instructor = instructor;
+		this.image = image;
 	}
 	
 	/**
@@ -55,23 +52,24 @@ public class Course {
 	 * @param title the title of the course
 	 * @param description the course description
 	 * @param courseLink the link to the original course webpage
-	 * @param startDate the date the course begins
+	 * @param startDate the String the course begins
 	 * @param duration the duration of the course (in weeks)
 	 * @param category the category of the course, i.e., "computer science"
 	 * @param university the university which offers the course
 	 * @param instructor the instructor which teaches the course
+	 * @param image the image url for the course
 	 */
 	public Course(int courseId, String title, String description,
-			String courseLink, Date startDate, int duration, String category,
-			String university, String instructor){
+			String courseLink, String startDate, int duration,
+			String university, String instructor, String image){
 		this.courseId = courseId;
 		this.title = title;
 		this.description = description;
 		this.courseLink = courseLink;
 		this.startDate = startDate;
 		this.duration = duration;
-		this.category = category;
 		this.university = university;
+		this.image = image;
 		this.instructor = instructor;
 	}
 	
@@ -126,17 +124,17 @@ public class Course {
 	}
 	
 	/**
-	  Sets the start date of the course.
-	  @param newDate the start date.
+	  Sets the start String of the course.
+	  @param newString the start String.
 	 */
-	public void setStartDate(Date newDate){
-		startDate = newDate;
+	public void setStartDate(String newString){
+		startDate = newString;
 	}
 	
 	/**
-	  Returns the course start date.
+	  Returns the course start String.
 	 */
-	public Date getStartDate(){
+	public String getStartDate(){
 		return startDate;
 	}
 	
@@ -153,21 +151,6 @@ public class Course {
 	 */
 	public int getDuration(){
 		return duration;
-	}
-	
-	/**	
-	  Sets the course category.
-	  @param newCategory the category
-	 */
-	public void setCategory(String newCategory){
-		category = newCategory;
-	}
-	
-	/**
-	  Returns the course category.
-	 */
-	public String getCategory(){
-		return category;
 	}
 	
 	/**
@@ -209,6 +192,22 @@ public class Course {
 	}
 	
 	/**
+	 * Sets the course image address
+	 * @param image the image url
+	 */
+	public void setImage(String image) {
+		this.image = image;
+	}
+	
+	/**
+	 * Returns the course image address
+	 * @return the image url
+	 */
+	public String getImage() {
+		return image;
+	}
+	
+	/**
 	  @return the course ID
 	 */
 	public int getCourseId() {
@@ -225,14 +224,17 @@ public class Course {
 		if (description == null)
 			description = "";
 		
-		if (category == null)
-			category = "";
+		if (image == null)
+			image = "";
 		
 		if (university == null)
 			university = "";
 		
 		if (instructor == null)
 			instructor = "";
+		
+		if (startDate == null)
+			startDate = "";
 	}
 	
 	/**
@@ -244,9 +246,9 @@ public class Course {
 		result += "Instructor: " + instructor + "\n";
 		result += "Course Link: " + courseLink + "\n";
 		result += "Start Date: " + startDate + "\n";
-		result += "Duration: " + duration + " Weeks\n";
-		result += "Category: " + category + "\n";
+		result += "Duration: " + duration + " Week(s)\n";
 		result += "Description: " + description + "\n";
+		result += "Image: " + image + "\n";
 		return result;
 	}
 }
