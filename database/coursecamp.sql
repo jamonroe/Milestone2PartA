@@ -13,11 +13,11 @@ CREATE TABLE IF NOT EXISTS `coursecamp`.`course_details` (
   `title` VARCHAR(250) NOT NULL,
   `description` TEXT NOT NULL,
   `course_link` TEXT NOT NULL,
-  `start_date` DATE NOT NULL,
+  `start_date` VARCHAR(250) NOT NULL,
   `duration` INT(11) NOT NULL,
-  `category` VARCHAR(250) NOT NULL,
   `university` VARCHAR(250) NOT NULL,
   `instructor` VARCHAR(250) NOT NULL,
+  `course_image` TEXT NOT NULL,
   PRIMARY KEY (`course_id`, `title`, `university`, `instructor`))
 ENGINE = InnoDB;
 
