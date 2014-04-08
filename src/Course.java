@@ -54,7 +54,6 @@ public class Course {
 	 * @param courseLink the link to the original course webpage
 	 * @param startDate the String the course begins
 	 * @param duration the duration of the course (in weeks)
-	 * @param category the category of the course, i.e., "computer science"
 	 * @param university the university which offers the course
 	 * @param instructor the instructor which teaches the course
 	 * @param image the image url for the course

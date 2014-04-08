@@ -83,19 +83,6 @@ public class Udacity {
 			if (m.find()) {
 				course.setDuration(Integer.parseInt(m.group()));
 			}
-			
-			// Fetch category.  
-			// Using the "Tracks" they have.  "Data Science Track" "Web Development Track"
-			// <!-- Course Info Bar -->
-			/* Elements courseInfoBar = doc.select("div[class=row course-info-bar row-gap-medium]");
-			Elements tracks = courseInfoBar.select("div[class=col-md-10]");
-			Elements trackLinks = tracks.select("a");
-			String category = "", comma = "";
-			for (Element e : trackLinks) {
-				category += comma + e.text();
-				comma = ", ";
-			}
-			course.setCategory(category.replaceAll(" Track", "")); */
 
 			// TODO Fetch startDate.  They all seem to be self paced courses.
 

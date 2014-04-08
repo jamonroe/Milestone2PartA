@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 /**
  * This class contains all the info to connect to the DB.
- * @author Christy and Thinh
+ * @author Christy and Thinh and Jason
  */
 
 public class Database {
@@ -100,18 +100,18 @@ public class Database {
 				 String course_link = rs.getString("course_link");
 				 Date start_date = rs.getDate("start_date");
 				 int duration = rs.getInt("duration");
-				 String category = rs.getString("category");
 				 String university = rs.getString("university");
 				 String instructor = rs.getString("instructor");
+				 String course_image = rs.getString("course_image");
 				 
 				returnString += "Title: " + title + "\n" 
 						+ "Description: " + description + "\n"
 						+ "Course Link: " + course_link + "\n"
 						+ "Start Date: " + start_date + "\n"
 						+ "Duration: " + duration + "\n"
-						+ "Category: " + category + "\n"
 						+ "Univeristy: " + university + "\n"
-						+ "Instructor: " + instructor + "\n\n"; 
+						+ "Instructor: " + instructor + "\n"
+						+ "Course Image: " + course_image + "\n\n"; 
 				}
 			} catch (Exception e) {
 				 e.printStackTrace();
