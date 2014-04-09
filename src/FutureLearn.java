@@ -116,7 +116,6 @@ public class FutureLearn {
 					.select("img");
 			new_course.setProfImage(educator_imgs.attr("src"));
 			
-			
 			// title.
 			String course_title = course_header
 					.select("a[class=title]")

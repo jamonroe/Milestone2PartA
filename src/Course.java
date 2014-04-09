@@ -491,7 +491,7 @@ public class Course {
 		result += "Category: " + category + "\n";
 		result += "University: " + university + "\n";
 		result += "Instructor: " + profname + "\n";
-		result += "Instructor Image: " + course_link + "\n";
+		result += "Instructor Image: " + profimage + "\n";
 		result += "Course Link: " + course_link + "\n";
 		result += "Site: " + site + "\n";
 		result += "Video Link: " + video_link + "\n";
