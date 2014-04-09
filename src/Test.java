@@ -9,21 +9,29 @@ import java.util.ArrayList;
  */
 
 public class Test {
+	
+	
 
 	public static void main(String[] args) throws SQLException, IOException {
 		
-		ArrayList<Course> udacity = Udacity.fetchCourses();
-		ArrayList<Course> futurelearn = FutureLearn.fetchCourses();
+//		ArrayList<Course> udacity = Udacity.fetchCourses();
+//		ArrayList<Course> futurelearn = FutureLearn.fetchCourses();
+//		
+//		Database.clearTable();
+//
+//		for (Course c : udacity)
+//			Database.insertCourse(c);
+//		for (Course c : futurelearn)
+//			Database.insertCourse(c);
+//		
+//		Database.toHtml();
+//		Database.close();
 		
-		Database.clearTable();
-
-		for (Course c : udacity)
-			Database.insertCourse(c);
-		for (Course c : futurelearn)
-			Database.insertCourse(c);
 		
-		Database.toHtml();
-		Database.close();
+		Date date = new Date(System.currentTimeMillis());				 
 
+		Course newClass = new Course("a", "b", "c", "d", "e", "f", "g", date, 7, "Computer Science", "Stanford", "Ronald MacDonald", 7, "a", Course.Certificate.NO, "f", date);
+
+		Database.insertCourse(newClass);	
 	}
 }

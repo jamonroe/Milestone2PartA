@@ -8,7 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
 /**
  * This class contains all the info to connect to the DB.
  * @author Christy and Thinh and Jason
@@ -19,12 +18,12 @@ public class Database {
 	   // JDBC driver name and database URL
 	   static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
 	   //Default port number
-	   static final String DB_URL = "jdbc:mysql://localhost:3306/";
+	   static final String DB_URL = "jdbc:mysql://www.sjsu-cs.org/cs160/2014spring/sec2group2/phpmyadmin/";
 	   
 	   //  Database credentials
-	   static final String DATABASE = "coursecamp";
-	   static final String USER = "demo";
-	   static final String PASS = "passwort";
+	   static final String DATABASE = "sjsucsor_160s2g22014s";
+	   static final String USER = "sjsucsor_s2g214s";
+	   static final String PASS = "CourseCampDB";
 	   private static Connection conn = null;
 
 	   /**
@@ -62,25 +61,48 @@ public class Database {
 		{
 			 PreparedStatement st = null;
 			 String sqlQuery =
-					   "INSERT INTO course_details "
-					 + "(title, description, course_link, start_date, duration, university, instructor, course_image) "
-					 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+					   "INSERT INTO course_data "
+					 + "(title, short_desc, long_desc, course_link, video_link, start_date, "
+					 + "course_length, course_image, category, site, course_fee, language, "
+					 + "certificate, university, time_scraped) "
+					 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			 
+			 PreparedStatement st2 = null;
+			 String sqlQuery2 = 
+					 "INSERT INTO coursedetails "
+							 + "(id, profname, profimage) "
+							 + "VALUES (?, ?, ?)";
+			 
 			 try {
 				 st = Database.getConnection().prepareStatement(sqlQuery);
+				 st2 = Database.getConnection().prepareStatement(sqlQuery2);
 			 } catch (Exception e) {
 				 e.printStackTrace();
 				 return;
 			 }
 
 			 st.setString(1, course.getTitle());
-			 st.setString(2, course.getDescription());
-			 st.setString(3, course.getCourseLink());
-			 st.setString(4, course.getStartDate());
-			 st.setInt(5, course.getDuration());
-			 st.setString(6, course.getUniversity());
-			 st.setString(7, course.getInstructor());
-			 st.setString(8, course.getImage());
-			 st.execute();		
+			 st.setString(2, course.getShortDescription());
+			 st.setString(3, course.getLongDescription());
+			 st.setString(4, course.getCourseLink());
+			 st.setString(5, course.getVideoLink());
+			 st.setDate(6, course.getStartDate());
+			 st.setInt(7, course.getCourseLength());
+			 st.setString(8, course.getCourseImage());
+			 st.setString(9, course.getCategory());
+			 st.setString(10, course.getSite());
+			 st.setInt(11, course.getCourseFee());
+			 st.setString(12, course.getLanguage());
+			 st.setString(13, course.getCertificate().enumToString());
+			 st.setString(14, course.getUniversity());
+			 st.setDate(15, course.getTimeScraped());
+			 
+			 st2.setInt(1, course.getID());
+			 st2.setString(2, course.getProfName());
+			 st2.setString(3, course.getProfImage());
+			 
+			 st.execute();	
+			 st2.execute();
 		}
 		
 		/*
@@ -95,23 +117,42 @@ public class Database {
 				query = Database.getConnection().prepareStatement("SELECT * FROM course_details");
 				ResultSet rs = query.executeQuery();
 				while(rs.next()) 
-				{String title = rs.getString("title");
-				 String description = rs.getString("description");
-				 String course_link = rs.getString("course_link");
-				 Date start_date = rs.getDate("start_date");
-				 int duration = rs.getInt("duration");
-				 String university = rs.getString("university");
-				 String instructor = rs.getString("instructor");
-				 String course_image = rs.getString("course_image");
-				 
-				returnString += "Title: " + title + "\n" 
-						+ "Description: " + description + "\n"
-						+ "Course Link: " + course_link + "\n"
-						+ "Start Date: " + start_date + "\n"
-						+ "Duration: " + duration + "\n"
-						+ "Univeristy: " + university + "\n"
-						+ "Instructor: " + instructor + "\n"
-						+ "Course Image: " + course_image + "\n\n"; 
+				{					
+					 String title = rs.getString("title");
+					 String course_link = rs.getString("course_link");
+					 Date start_date = rs.getDate("start_date");
+					 String university = rs.getString("university");
+					 String course_image = rs.getString("course_image");
+					 String profname = rs.getString("profname");
+					 String profimage = rs.getString("profimage");
+					 String short_desc = rs.getString("short_desc");
+					 String long_desc = rs.getString("long_desc");
+					 String video_link = rs.getString("video_link");
+					 int course_length = rs.getInt("course_length");
+					 String category = rs.getString("category");
+					 String site = rs.getString("site");
+					 int course_fee = rs.getInt("course_fee");
+					 String language = rs.getString("language");
+					 String certificate = rs.getString("certificate");
+					 Date time_scraped = rs.getDate("time_scraped");
+				
+				returnString += "Title: " + title + "\n"
+					 + "Category: " + category + "\n"
+					 + "University: " + university + "\n"
+					 + "Instructor: " + profname + "\n"
+					 + "Instructor Image: " + profimage + "\n"
+					 + "Course Link: " + course_link + "\n"
+					 + "Site: " + site + "\n"
+					 + "Video Link: " + video_link + "\n"
+					 + "Start Date: " + start_date.toString() + "\n"
+					 + "Duration: " + course_length + " Week(s)\n"
+					 + "Short Description: " + short_desc + "\n"
+					 + "Long Description: " + long_desc + "\n"
+					 + "Image: " + course_image + "\n"
+					 + "Course Fee: " + course_fee + "\n"
+					 + "Language: " + language + "\n"
+					 + "Certificate: " + certificate + "\n"
+					 + "Time Scraped: " + time_scraped + "\n\n";
 				}
 			} catch (Exception e) {
 				 e.printStackTrace();
@@ -137,12 +178,21 @@ public class Database {
 			sb.append("<tr>");
 			sb.append("<td>Title</td>");
 			sb.append("<td>Start Date</td>");
-			sb.append("<td>Duration</td>");
+			sb.append("<td>Course Length</td>");
 			sb.append("<td>University</td>");
 			sb.append("<td>Instructor</td>");
-			sb.append("<td>Description</td>");
+			sb.append("<td>Instructor Image</td>");
+			sb.append("<td>Short Description</td>");
+			sb.append("<td>Long Description</td>");
 			sb.append("<td>Course Link</td>");
+			sb.append("<td>Video Link</td>");
 			sb.append("<td>Course Image</td>");
+			sb.append("<td>Category</td>");
+			sb.append("<td>Site</td>");
+			sb.append("<td>Course Fee</td>");
+			sb.append("<td>Language</td>");
+			sb.append("<td>Certificate</td>");
+			sb.append("<td>Time Scraped</td>");
 			sb.append("</tr>");
 			
 			PreparedStatement query = null;
@@ -151,25 +201,44 @@ public class Database {
 				query = Database.getConnection().prepareStatement("SELECT * FROM course_details");
 				ResultSet rs = query.executeQuery();
 				while(rs.next()) 
-				{String title = rs.getString("title");
-				 String description = rs.getString("description").substring(0, 30) + "...";
-				 String course_link = rs.getString("course_link");
-				 String start_date = rs.getString("start_date");
-				 int duration = rs.getInt("duration");
-				 String university = rs.getString("university");
-				 String instructor = rs.getString("instructor");
-				 String course_image = rs.getString("course_image");
-				 
-				 sb.append("<tr>");
-				 sb.append("<td>" + title + "</td>");
-				 sb.append("<td>" + start_date + "</td>");
-				 sb.append("<td>" + duration + "</td>");
-				 sb.append("<td>" + university + "</td>");
-				 sb.append("<td>" + instructor + "</td>");
-				 sb.append("<td>" + description + "</td>");
-				 sb.append("<td>" + course_link + "</td>");
-				 sb.append("<td>" + course_image + "</td>");
-				 sb.append("</tr>");
+				{					 
+					 String title = rs.getString("title");
+					 String course_link = rs.getString("course_link");
+					 Date start_date = rs.getDate("start_date");
+					 String university = rs.getString("university");
+					 String course_image = rs.getString("course_image");
+					 String profname = rs.getString("profname");
+					 String profimage = rs.getString("profimage");
+					 String short_desc = rs.getString("short_desc").substring(0, 30) + "...";
+					 String long_desc = rs.getString("long_desc").substring(0, 30) + "...";
+					 String video_link = rs.getString("video_link");
+					 int course_length = rs.getInt("course_length");
+					 String category = rs.getString("category");
+					 String site = rs.getString("site");
+					 int course_fee = rs.getInt("course_fee");
+					 String language = rs.getString("language");
+					 String certificate = rs.getString("certificate");
+					 Date time_scraped = rs.getDate("time_scraped");
+					 
+					 sb.append("<tr>");
+					 sb.append("<td>" + title + "</td>");
+					 sb.append("<td>" + course_link + "</td>");
+					 sb.append("<td>" + start_date + "</td>");
+					 sb.append("<td>" + university + "</td>");
+					 sb.append("<td>" + course_image + "</td>");
+					 sb.append("<td>" + profname + "</td>");
+					 sb.append("<td>" + profimage + "</td>");
+					 sb.append("<td>" + short_desc + "</td>");
+					 sb.append("<td>" + long_desc + "</td>");
+					 sb.append("<td>" + video_link + "</td>");
+					 sb.append("<td>" + course_length + "</td>");
+					 sb.append("<td>" + category + "</td>");
+					 sb.append("<td>" + site + "</td>");
+					 sb.append("<td>" + course_fee + "</td>");
+					 sb.append("<td>" + language + "</td>");
+					 sb.append("<td>" + certificate + "</td>");
+					 sb.append("<td>" + time_scraped + "</td>");
+					 sb.append("</tr>");
 				}
 			} catch (Exception e) {
 				 e.printStackTrace();
@@ -184,6 +253,7 @@ public class Database {
 			out.write(sb.toString());
 			out.close();
 		}
+		
 		
 		/**
 		  Clears the entire table.
