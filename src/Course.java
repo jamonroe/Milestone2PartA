@@ -1,4 +1,5 @@
 import java.sql.Date;
+import java.util.HashMap;
 
 
 /**
@@ -8,8 +9,7 @@ import java.sql.Date;
 
 public class Course {
 	
-	private String profname;
-	private String profimage;
+	private HashMap<String, String> professors;
 	private int course_id;
 	
 	private int id;
@@ -60,13 +60,12 @@ public class Course {
 	 * @param course_fee
 	 * @param language
 	 */
-	public Course(String profname, String profimage, String title, String short_desc,
+	public Course(HashMap<String, String> professors, String title, String short_desc,
 			String long_desc, String course_link, String video_link, Date start_date, int course_length,
 			String course_image, String category, String site, int course_fee, String language, 
 			Certificate certificate, String university, Date time_scraped)
 	{
-		this.profname = profname;
-		this.profimage = profimage;
+		this.professors = professors;
 		this.title = title;
 		this.short_desc = short_desc;
 		this.long_desc = long_desc;
@@ -109,14 +108,13 @@ public class Course {
 	 * @param university
 	 * @param time_scraped
 	 */
-	public Course(int id, String profname, String profimage, int course_id, String title, String short_desc,
+	public Course(int id, HashMap<String, String> professors, int course_id, String title, String short_desc,
 			String long_desc, String course_link, String video_link, Date start_date, int course_length,
 			String course_image, String category, String site, int course_fee, String language, 
 			Certificate certificate, String university, Date time_scraped)
 	{
 		this.id = id;
-		this.profname = profname;
-		this.profimage = profimage;
+		this.professors = professors;
 		this.course_id = 0;
 		this.title = title;
 		this.short_desc = short_desc;
@@ -158,33 +156,15 @@ public class Course {
 	  Sets the professor name.
 	  @param profName the name of the professor
 	 */
-	public void setProfName(String profName){
-		this.profname = 
-				profName.length() > 30 ? 
-				profName.substring(0, 29) :
-				profName ;
+	public void setProfessors(HashMap<String, String> professors){
+		this.professors = professors;
 	}
 	
 	/**
 	  @return the professor's name
 	 */
-	public String getProfName(){
-		return profname;
-	}
-	
-	/**
-	  Sets the URL to the professor image.
-	  @param profImage the image URL
-	 */
-	public void setProfImage(String profImage){
-		profimage = profImage;
-	}
-	
-	/**
-	  @return the image URL of the professor image
-	 */
-	public String getProfImage(){
-		return profimage;
+	public HashMap<String, String> getProfessors(){
+		return professors;
 	}
 	
 	/**
@@ -455,11 +435,8 @@ public class Course {
 		if (university == null)
 			university = "N/A";
 		
-		if (profname == null)
-			profname = "N/A";
-		
-		if (profimage == null)
-			profimage = "N/A";
+		if (professors == null)
+			professors.put("N/A", "N/A");
 		
 		if (course_link == null)
 			course_link = "N/A";
@@ -493,8 +470,18 @@ public class Course {
 		String result = "Title: " + title + "\n";
 		result += "Category: " + category + "\n";
 		result += "University: " + university + "\n";
-		result += "Instructor: " + profname + "\n";
-		result += "Instructor Image: " + profimage + "\n";
+		
+		if (professors.size()==1){
+			result += "Instructor: " + professors.keySet() + "\n";
+			result += "Instructor Image: " + professors.get(0) + "\n";
+		}
+		else{
+			for (String key : professors.keySet()){
+				result += "Instructor: " + key + "\n";
+				result += "Instructor Image: " + professors.get(key) + "\n";
+			}
+		}		
+		
 		result += "Course Link: " + course_link + "\n";
 		result += "Site: " + site + "\n";
 		result += "Video Link: " + video_link + "\n";

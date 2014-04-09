@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 
 /**
  * This class contains all the info to connect to the DB.
@@ -69,15 +70,8 @@ public class Database {
 					 + "certificate, university, time_scraped) "
 					 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			 
-			 PreparedStatement st2 = null;
-			 String sqlQuery2 = 
-					 "INSERT INTO coursedetails "
-							 + "(profname, profimage) "
-							 + "VALUES (?, ?)";
-			 
 			 try {
 				 st = Database.getConnection().prepareStatement(sqlQuery);
-				 st2 = Database.getConnection().prepareStatement(sqlQuery2);
 			 } catch (Exception e) {
 				 e.printStackTrace();
 				 return;
@@ -99,11 +93,31 @@ public class Database {
 			 st.setString(14, course.getUniversity());
 			 st.setDate(15, course.getTimeScraped());
 			 
-			 st2.setString(1, course.getProfName());
-			 st2.setString(2, course.getProfImage());
-			 
 			 st.execute();	
-			 st2.execute();
+			 
+			 
+			 // For each professor in the course, add the name and image to the db.
+			 HashMap<String, String> profList = course.getProfessors();
+			 for (String key : profList.keySet()){			 
+				 
+				 PreparedStatement st2 = null;
+				 String sqlQuery2 = 
+						 "INSERT INTO coursedetails "
+								 + "(profname, profimage) "
+								 + "VALUES (?, ?)";
+				 
+				 try {
+					 st2 = Database.getConnection().prepareStatement(sqlQuery2);
+				 } catch (Exception e) {
+					 e.printStackTrace();
+					 return;
+				 }
+				 
+				 st2.setString(1, key);
+				 st2.setString(2, profList.get(key));
+				 
+				 st2.execute();
+			 }
 		}
 		
 		/*
@@ -284,7 +298,7 @@ public class Database {
 					 
 					 sb2.append("<tr>");
 					 sb2.append("<td>" + profName + "</td>");
-					 sb2.append("<td><img src='" + profImage + "'></td>");
+					 sb2.append("<td><img src='" + profImage + "' height='60' width='70'></td>");
 					 sb2.append("</tr>\n");
 				}
 			} catch (Exception e) {
