@@ -9,7 +9,7 @@ import com.google.gson.Gson;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -37,6 +37,7 @@ public class Udacity {
 			Document doc;
 			try {
 				doc = Jsoup.connect(course.getCourseLink()).get();
+				System.out.println("Connected to " + course.getCourseLink());
 			} catch (Exception e) {
 				System.out.println("Could not connect to " + courseURL + course.getCourseLink());
 				iterator.remove();
@@ -85,8 +86,8 @@ public class Udacity {
 					university_comma = ", ";
 				}
 			}
-			course.setProfName(instructors);
-			course.setUniversity(university);
+			if (!instructors.equals("")) course.setProfName(instructors);
+			if (!university.equals("")) course.setUniversity(university);
 			
 			// course_length.
 			// <!-- Duration -->
@@ -107,10 +108,11 @@ public class Udacity {
 			Elements trailerInfo = doc
 					.select("div[class=scale-media]")
 					.select("div");
-			course.setVideoLink(YOUTUBE + trailerInfo.attr("data-video-id"));
+			if (trailerInfo.size() > 0)
+				course.setVideoLink(YOUTUBE + trailerInfo.attr("data-video-id"));
 
 			// time_scraped.
-			course.setTimeScraped((java.sql.Date)new Date());
+			course.setTimeScraped(new Date(new java.util.Date().getTime()));
 			
 			/* ****************** */
 			/*                    */

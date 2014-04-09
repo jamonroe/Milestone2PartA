@@ -1,6 +1,6 @@
 import org.jsoup.*;
 
-import java.util.Date;
+import java.sql.Date;
 
 import org.jsoup.nodes.*;
 import org.jsoup.select.Elements;
@@ -25,8 +25,9 @@ public class FutureLearn {
 		Document doc;
 		try {
 			doc = Jsoup.connect(courseURL).get();
+			System.out.println("Connected to " + URL);
 		} catch (IOException e) {
-			System.out.println("Could not connect to: " + URL);
+			System.out.println("Could not connect to " + URL);
 			return courseList;
 		}
 		
@@ -57,6 +58,7 @@ public class FutureLearn {
 			Document course_page;
 			try {
 				course_page = Jsoup.connect(course_link).get();
+				System.out.println("Connected to " + course_link);
 			} catch (IOException e) {
 				System.out.println("Could not connect to: " + course_link);
 				continue;
@@ -139,7 +141,8 @@ public class FutureLearn {
 			
 			// video_link.
 			Elements video = course_page.select("iframe");
-			new_course.setVideoLink(video.attr("src"));
+			if (video.size() > 0) 
+				new_course.setVideoLink(video.attr("src"));
 			
 			// long_desc
 			Elements long_description = course_page
@@ -148,7 +151,7 @@ public class FutureLearn {
 			new_course.setLongDescription(long_description.text());
 			
 			// time_scraped
-			new_course.setTimeScraped((java.sql.Date)new Date());
+			new_course.setTimeScraped(new Date(new java.util.Date().getTime()));
 
 			/* ****************** */
 			/*                    */
