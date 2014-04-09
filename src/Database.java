@@ -168,13 +168,19 @@ public class Database {
 		 */
 		public static void toHtml() throws SQLException, IOException
 		{
+			/* ****************** */
+			/*                    */
+			/* Course_data Table  */
+			/*                    */
+			/* ****************** */
+			
 			StringBuilder sb = new StringBuilder();
 			sb.append("<html>");
 			sb.append("<body>");
 			
-			sb.append("<title>CourseCamp</title>");
+			sb.append("<title>course_data</title>");
 			
-			sb.append("<table border=\"1\" style=\"width:2000px\">");
+			sb.append("<table border=\"1\">");
 			
 			sb.append("<tr>");
 			sb.append("<td>Title</td>");
@@ -183,8 +189,6 @@ public class Database {
 			sb.append("<td>Course Length</td>");
 			sb.append("<td>University</td>");
 			sb.append("<td>Course Image</td>");
-//			sb.append("<td>Instructor</td>");
-//			sb.append("<td>Instructor Image</td>");
 			sb.append("<td>Short Description</td>");
 			sb.append("<td>Long Description</td>");
 			sb.append("<td>Video Link</td>");
@@ -208,8 +212,6 @@ public class Database {
 					 Date start_date = rs.getDate("start_date");
 					 int course_length = rs.getInt("course_length");
 					 String university = rs.getString("university");
-//					 String profname = rs.getString("profname");
-//					 String profimage = rs.getString("profimage");
 					 String short_desc = rs.getString("short_desc").substring(0, 30) + "...";
 					 String long_desc = rs.getString("long_desc").substring(0, 30) + "...";
 					 String video_link = rs.getString("video_link");
@@ -228,8 +230,6 @@ public class Database {
 					 sb.append("<td>" + course_length + " weeks</td>");
 					 sb.append("<td>" + university + "</td>");
 					 sb.append("<td><img src='" + course_image + "' height='60' width='70'></td>");
-//					 sb.append("<td>" + profname + "</td>");
-//					 sb.append("<td><img src='" + profimage + "'></td>");
 					 sb.append("<td>" + short_desc + "</td>");
 					 sb.append("<td>" + long_desc + "</td>");
 					 // Check if video_link should be a link or N/A
@@ -253,12 +253,59 @@ public class Database {
 			sb.append("</body>");
 			sb.append("</html>");
 			
-			FileWriter fstream = new FileWriter("coursecamp.html");
+			/* ******************* */
+			/*                     */
+			/* Coursedetails Table */
+			/*                     */
+			/* ******************* */
+			
+			StringBuilder sb2 = new StringBuilder();
+			sb2.append("<html>");
+			sb2.append("<body>");
+			
+			sb2.append("<title>course_data</title>");
+			
+			sb2.append("<table border=\"1\">");
+			
+			sb2.append("<tr>");
+			sb2.append("<td>Instructor</td>");
+			sb2.append("<td>Instructor Image</td>");
+			sb2.append("</tr>\n");
+			
+			PreparedStatement query2 = null;
+			
+			try{
+				query2 = Database.getConnection().prepareStatement("SELECT * FROM coursedetails");
+				ResultSet rs2 = query2.executeQuery();
+				while(rs2.next()) 
+				{					 
+					 String profName = rs2.getString("profname");
+					 String profImage = rs2.getString("profimage");
+					 
+					 sb2.append("<tr>");
+					 sb2.append("<td>" + profName + "</td>");
+					 sb2.append("<td><img src='" + profImage + "'></td>");
+					 sb2.append("</tr>\n");
+				}
+			} catch (Exception e) {
+				 e.printStackTrace();
+				 return;
+			}
+			sb2.append("</table>");
+			sb2.append("</body>");
+			sb2.append("</html>");			
+			
+			
+			
+			FileWriter fstream = new FileWriter("course_data.html");
+			FileWriter fstream2 = new FileWriter("coursedetails.html");
 			BufferedWriter out = new BufferedWriter(fstream);
+			BufferedWriter out2 = new BufferedWriter(fstream2);
 			out.write(sb.toString());
+			out2.write(sb2.toString());
 			out.close();
+			out2.close();
 		}
-		
 		
 		/**
 		  Clears the entire table.

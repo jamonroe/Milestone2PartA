@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 /**
  * This program creates a course object and tests that it can be added to the DB.
- * @author: Christy and Thinh
+ * @author: Christy and Thinh and Jason
  */
 
 public class Test {
