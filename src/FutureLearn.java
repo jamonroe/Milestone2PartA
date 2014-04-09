@@ -141,7 +141,7 @@ public class FutureLearn {
 			// video_link.
 			Elements video = course_page.select("iframe");
 			if (video.size() > 0) 
-				new_course.setVideoLink(video.attr("src"));
+				new_course.setVideoLink("http:" + video.attr("src"));
 			
 			// long_desc
 			Elements long_description = course_page

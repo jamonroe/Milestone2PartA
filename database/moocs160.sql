@@ -29,7 +29,7 @@ USE `moocs160`;
 --
 
 CREATE TABLE IF NOT EXISTS `coursedetails` (
-  `id` int(4) NOT NULL,
+  `id` int(4) NOT NULL AUTO_INCREMENT,
   `profname` varchar(30) NOT NULL,
   `profimage` text NOT NULL,
   `course_id` int(5) DEFAULT NULL,

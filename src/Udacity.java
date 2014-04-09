@@ -108,7 +108,7 @@ public class Udacity {
 			Elements trailerInfo = doc
 					.select("div[class=scale-media]")
 					.select("div");
-			if (trailerInfo.size() > 0)
+			if (trailerInfo.attr("data-video-id").length() != 0)
 				course.setVideoLink(YOUTUBE + trailerInfo.attr("data-video-id"));
 
 			// time_scraped.
@@ -168,7 +168,7 @@ public class Udacity {
 				// course_image.
 				try {
 					image = (String)((Map)((Map)((Map)map.get(s)).get("catalog_entry")).get("_image")).get("serving_url");
-					course.setCourseImage(image);
+					course.setCourseImage("http:" + image);
 				} catch (Exception e) {
 					// Do nothing
 				}

@@ -159,7 +159,10 @@ public class Course {
 	  @param profName the name of the professor
 	 */
 	public void setProfName(String profName){
-		this.profname = profName;
+		this.profname = 
+				profName.length() > 30 ? 
+				profName.substring(0, 29) :
+				profName ;
 	}
 	
 	/**

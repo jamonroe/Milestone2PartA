@@ -13,15 +13,16 @@ public class Test {
 	
 
 	public static void main(String[] args) throws SQLException, IOException {
+		Database.clearTable();
 		
-//		ArrayList<Course> udacity = Udacity.fetchCourses();
+		ArrayList<Course> udacity = Udacity.fetchCourses();
 		ArrayList<Course> futurelearn = FutureLearn.fetchCourses();
 
-//		for (Course c : udacity)
-//			System.out.println(c);
+		for (Course c : udacity)
+			Database.insertCourse(c);
 		for (Course c : futurelearn)
-			System.out.println(c);
+			Database.insertCourse(c);
 		
-		
+		Database.toHtml();
 	}
 }

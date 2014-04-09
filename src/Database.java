@@ -18,12 +18,14 @@ public class Database {
 	   // JDBC driver name and database URL
 	   static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
 	   //Default port number
-	   static final String DB_URL = "jdbc:mysql://www.sjsu-cs.org/cs160/2014spring/sec2group2/phpmyadmin/";
+	   //static final String DB_URL = "jdbc:mysql://www.sjsu-cs.org/cs160/2014spring/sec2group2/phpmyadmin:3306/";
+	   //static final String DB_URL = "jdbc:mysql://69.89.31.134:3306/";
+	   static final String DB_URL = "jdbc:mysql://localhost:3306/";
 	   
 	   //  Database credentials
-	   static final String DATABASE = "sjsucsor_160s2g22014s";
-	   static final String USER = "sjsucsor_s2g214s";
-	   static final String PASS = "CourseCampDB";
+	   static final String DATABASE = "moocs160";
+	   static final String USER = "demo";
+	   static final String PASS = "passwort";
 	   private static Connection conn = null;
 
 	   /**
@@ -70,8 +72,8 @@ public class Database {
 			 PreparedStatement st2 = null;
 			 String sqlQuery2 = 
 					 "INSERT INTO coursedetails "
-							 + "(id, profname, profimage) "
-							 + "VALUES (?, ?, ?)";
+							 + "(profname, profimage) "
+							 + "VALUES (?, ?)";
 			 
 			 try {
 				 st = Database.getConnection().prepareStatement(sqlQuery);
@@ -97,9 +99,8 @@ public class Database {
 			 st.setString(14, course.getUniversity());
 			 st.setDate(15, course.getTimeScraped());
 			 
-			 st2.setInt(1, course.getID());
-			 st2.setString(2, course.getProfName());
-			 st2.setString(3, course.getProfImage());
+			 st2.setString(1, course.getProfName());
+			 st2.setString(2, course.getProfImage());
 			 
 			 st.execute();	
 			 st2.execute();
@@ -177,42 +178,42 @@ public class Database {
 			
 			sb.append("<tr>");
 			sb.append("<td>Title</td>");
+			sb.append("<td>Course Link</td>");
 			sb.append("<td>Start Date</td>");
 			sb.append("<td>Course Length</td>");
 			sb.append("<td>University</td>");
-			sb.append("<td>Instructor</td>");
-			sb.append("<td>Instructor Image</td>");
+			sb.append("<td>Course Image</td>");
+//			sb.append("<td>Instructor</td>");
+//			sb.append("<td>Instructor Image</td>");
 			sb.append("<td>Short Description</td>");
 			sb.append("<td>Long Description</td>");
-			sb.append("<td>Course Link</td>");
 			sb.append("<td>Video Link</td>");
-			sb.append("<td>Course Image</td>");
 			sb.append("<td>Category</td>");
 			sb.append("<td>Site</td>");
 			sb.append("<td>Course Fee</td>");
 			sb.append("<td>Language</td>");
 			sb.append("<td>Certificate</td>");
 			sb.append("<td>Time Scraped</td>");
-			sb.append("</tr>");
+			sb.append("</tr>\n");
 			
 			PreparedStatement query = null;
 			
 			try{
-				query = Database.getConnection().prepareStatement("SELECT * FROM course_details");
+				query = Database.getConnection().prepareStatement("SELECT * FROM course_data");
 				ResultSet rs = query.executeQuery();
 				while(rs.next()) 
 				{					 
 					 String title = rs.getString("title");
 					 String course_link = rs.getString("course_link");
 					 Date start_date = rs.getDate("start_date");
+					 int course_length = rs.getInt("course_length");
 					 String university = rs.getString("university");
-					 String course_image = rs.getString("course_image");
-					 String profname = rs.getString("profname");
-					 String profimage = rs.getString("profimage");
+//					 String profname = rs.getString("profname");
+//					 String profimage = rs.getString("profimage");
 					 String short_desc = rs.getString("short_desc").substring(0, 30) + "...";
 					 String long_desc = rs.getString("long_desc").substring(0, 30) + "...";
 					 String video_link = rs.getString("video_link");
-					 int course_length = rs.getInt("course_length");
+					 String course_image = rs.getString("course_image");
 					 String category = rs.getString("category");
 					 String site = rs.getString("site");
 					 int course_fee = rs.getInt("course_fee");
@@ -222,23 +223,27 @@ public class Database {
 					 
 					 sb.append("<tr>");
 					 sb.append("<td>" + title + "</td>");
-					 sb.append("<td>" + course_link + "</td>");
+					 sb.append("<td><a href='" + course_link + "'>" + course_link + "</a></td>");
 					 sb.append("<td>" + start_date + "</td>");
+					 sb.append("<td>" + course_length + " weeks</td>");
 					 sb.append("<td>" + university + "</td>");
-					 sb.append("<td>" + course_image + "</td>");
-					 sb.append("<td>" + profname + "</td>");
-					 sb.append("<td>" + profimage + "</td>");
+					 sb.append("<td><img src='" + course_image + "' height='60' width='70'></td>");
+//					 sb.append("<td>" + profname + "</td>");
+//					 sb.append("<td><img src='" + profimage + "'></td>");
 					 sb.append("<td>" + short_desc + "</td>");
 					 sb.append("<td>" + long_desc + "</td>");
-					 sb.append("<td>" + video_link + "</td>");
-					 sb.append("<td>" + course_length + "</td>");
+					 // Check if video_link should be a link or N/A
+					 if (video_link.equalsIgnoreCase("N/A"))
+						 sb.append("<td>" + video_link + "</td>");
+					 else
+						 sb.append("<td><a href='" + video_link + "'>" + video_link + "</a></td>");
 					 sb.append("<td>" + category + "</td>");
-					 sb.append("<td>" + site + "</td>");
+					 sb.append("<td><a href='" + site + "'>" + site + "</a></td>");
 					 sb.append("<td>" + course_fee + "</td>");
 					 sb.append("<td>" + language + "</td>");
 					 sb.append("<td>" + certificate + "</td>");
 					 sb.append("<td>" + time_scraped + "</td>");
-					 sb.append("</tr>");
+					 sb.append("</tr>\n");
 				}
 			} catch (Exception e) {
 				 e.printStackTrace();
@@ -261,14 +266,17 @@ public class Database {
 		public static void clearTable() throws SQLException
 		{
 			 PreparedStatement st = null;
-			 String sqlStatement = "DELETE FROM course_details WHERE course_id > -1";
+			 String sqlStatement1 = "DELETE FROM course_data WHERE id > -1";
+			 String sqlStatement2 = "DELETE FROM coursedetails WHERE id > -1";
 			 try {
-				 st = Database.getConnection().prepareStatement(sqlStatement);
+				 st = Database.getConnection().prepareStatement(sqlStatement1);
+				 st.execute();
+				 st = Database.getConnection().prepareStatement(sqlStatement2);
+				 st.execute();
 			 } catch (Exception e) {
 				 e.printStackTrace();
 				 return;
-			 }
-			 st.execute();		
+			 }		
 		}
 		
 		/**
@@ -283,4 +291,13 @@ public class Database {
 			}
 		}
 		
+		public static boolean testConnection() {
+			try {
+				 Database.getConnection();
+				 return true;
+			 } catch (Exception e) {
+				 e.printStackTrace();
+				 return false;
+			 }
+		}
 }
