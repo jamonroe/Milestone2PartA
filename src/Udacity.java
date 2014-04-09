@@ -78,7 +78,7 @@ public class Udacity {
 					image_link = e.children().select("img[class=img-circle instructor-picture]").attr("data-ng-src");
 					m = p.matcher(image_link);
 					if (m.find()) {
-						course.setProfImage(m.group());
+						course.setProfImage("http:" + m.group());
 					}
 					
 				} else {
