@@ -6,10 +6,10 @@ import org.jsoup.select.Elements;
 
 import com.google.gson.Gson;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -18,14 +18,16 @@ import java.util.regex.Pattern;
 
 public class Udacity {
 	
-	public static String URL = "https://www.udacity.com/courses#!/All";
+	public static String URL = "https://www.udacity.com";
+	public static String CATALOG = "https://www.udacity.com/courses#!/All";
 	public static String courseURL = "http://www.udacity.com/course/";
 	public static String JSON_URL = "https://www.udacity.com/api/nodes?depth=2&fresh=false&keys[]=course_catalog&projection=catalog&required_behavior=find";
+	public static String YOUTUBE = "https://www.youtube.com/watch?v=";
 	
 	public static void main(String[] args) {
 		fetchCourses();
 	}
-	
+
 	public static ArrayList<Course> fetchCourses() {
 		ArrayList<Course> courseList = initializeCourses();
 		Iterator<Course> iterator = courseList.iterator();
@@ -41,21 +43,28 @@ public class Udacity {
 				continue;
 			}
 			
-			// Fetch title.
+			// site.
+			course.setSite(URL);
+			
+			// title.
 			Elements title = doc.select("title");
 			course.setTitle(title.text().replaceAll(" - Udacity", ""));
 			
-			// Fetch description.
+			// long_desc.
 			// <!-- Left Column With Enrollment Buttons and Course Information -->
 			Elements courseInfo = doc.select("div[class=col-md-8 col-md-offset-2]");
 			Elements courseSummary = courseInfo.select("div[class=pretty-format]");
-			course.setDescription(courseSummary.text());
+			course.setLongDescription(courseSummary.text());
 			
-			// Fetch instructor. Fetch University.
-			Elements instructorList = doc.select("div[class=row row-gap-medium instructor-information-entry]");
-			Elements instructor = instructorList.select("div[class=col-md-6 instructor-information pull-left]");
+			// profname and university.
+			// TODO update this for new model
+			Elements instructor = doc
+					.select("div[class=row row-gap-medium instructor-information-entry]")
+					.select("div[class=col-md-6 instructor-information pull-left]");
 			
-			String instructors = "", instructor_comma = "", university = "", university_comma = "";
+			Pattern p = Pattern.compile("(?<=').*(?=')");
+			Matcher m;
+			String instructors = "", instructor_comma = "", university = "", university_comma = "", image_link;
 			Elements teacherTest;		
 			for (Element e : instructor) {
 				teacherTest = e.children().select("div[class=pretty-format]");
@@ -63,35 +72,68 @@ public class Udacity {
 				if (teacherTest.size()>0) {
 					instructors += instructor_comma + e.children().select("h3[class=h-slim]").text();
 					instructor_comma = ", ";
+					
+					// profimage
+					image_link = e.children().select("img[class=img-circle instructor-picture]").attr("data-ng-src");
+					m = p.matcher(image_link);
+					if (m.find()) {
+						course.setProfImage(m.group());
+					}
+					
 				} else {
 					university += university_comma + e.children().select("h3[class=h-slim]").text();
 					university_comma = ", ";
 				}
 			}
-			course.setInstructor(instructors);
+			course.setProfName(instructors);
 			course.setUniversity(university);
 			
-			// Fetch duration.
+			// course_length.
 			// <!-- Duration -->
-			Elements durationInfo = doc.select("div[class=col-md-3 duration-information]");
-			Elements duration = durationInfo.select("p");
+			Elements duration = doc
+					.select("div[class=col-md-3 duration-information]")
+					.select("p");
 			String text = duration.get(0).text();
 			
 			// Use regex to find the approx. months
-			Pattern p = Pattern.compile("[0-9]");
-			Matcher m = p.matcher(text);
+			p = Pattern.compile("[0-9]");
+			m = p.matcher(text);
 			if (m.find()) {
-				course.setDuration(Integer.parseInt(m.group()));
+				course.setCourseLength(Integer.parseInt(m.group()));
 			}
 
-			// TODO Fetch startDate.  They all seem to be self paced courses.
+			// video_link.
+			// <!-- View trailer modal -->
+			Elements trailerInfo = doc
+					.select("div[class=scale-media]")
+					.select("div");
+			course.setVideoLink(YOUTUBE + trailerInfo.attr("data-video-id"));
 
+			// time_scraped.
+			course.setTimeScraped((java.sql.Date)new Date());
+			
+			/* ****************** */
+			/*                    */
+			/* Data not available */
+			/*                    */
+			/* ****************** */
+
+			// (N/A) startDate   Udacity has only self-paced courses
+			// (N/A) category    Udacity has no categories other than tracks
+			// (N/A) course_fee  Udacity provides all free courses
+			// (N/A) language    Udacity does not provide language information presumably only English
+			// (N/A) certificate Udacity does not have any certificates
+			
 			course.cleanseData();
-			System.out.println(course);
+			//System.out.println(course);
 		}
 		return courseList;
 	}
 	
+	/**
+	 * initializeCourses uses the JSON file to find course links, course image, and short description
+	 * @return The list of courses
+	 */
 	public static ArrayList<Course> initializeCourses() {
 		URL url;
 	    InputStream is = null;
@@ -110,17 +152,29 @@ public class Udacity {
 	        Set<String> set = map.keySet();
 	        
 	        Course course;
-	        String image;
+	        String image, desc;
 	        for (String s : set) {
 		        course = new Course();
 		        
-		        // Set the course link
+		        /* **** */
+		        /* JSON */
+		        /* **** */
+		        
+		        // course_link.
 				course.setCourseLink(courseURL + s);
 				
-				// Get the image from the object
+				// course_image.
 				try {
 					image = (String)((Map)((Map)((Map)map.get(s)).get("catalog_entry")).get("_image")).get("serving_url");
-					course.setImage(image);
+					course.setCourseImage(image);
+				} catch (Exception e) {
+					// Do nothing
+				}
+				
+				// short_desc.
+				try {
+					desc = (String)((Map)((Map)map.get(s)).get("catalog_entry")).get("short_summary");
+					course.setShortDescription(desc);
 				} catch (Exception e) {
 					// Do nothing
 				}
