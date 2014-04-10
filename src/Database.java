@@ -280,7 +280,7 @@ public class Database {
 			sb2.append("<html>");
 			sb2.append("<body>");
 			
-			sb2.append("<title>course_data</title>");
+			sb2.append("<title>coursedetails</title>");
 			
 			sb2.append("<table border=\"1\">");
 			
