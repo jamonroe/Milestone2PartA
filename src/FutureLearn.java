@@ -114,7 +114,7 @@ public class FutureLearn {
 			Elements educator_imgs = course_page
 					.select("div[class=educator]")
 					.select("img");
-			new_course.setProfImage(educator_imgs.attr("src"));
+			new_course.setProfImage("http:" + educator_imgs.attr("src"));
 			
 			// title.
 			String course_title = course_header
