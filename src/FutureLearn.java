@@ -100,7 +100,7 @@ public class FutureLearn {
 			Elements educator_imgs = course_page
 					.select("div[class=educator]")
 					.select("img");
-			String profimage = "http:" + educator_imgs.attr("src");
+			String profimage = educator_imgs.attr("src");
 			
 			// instructor.
 			Elements teachers = course_page
