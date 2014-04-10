@@ -130,7 +130,7 @@ public class Database {
 					 e.printStackTrace();
 					 return;
 				 }
-				 // This isn't helping
+				 // TODO fix this
 				 String profname = new String(key.getBytes(), Charset.forName("UTF-8"));
 				 if (profname.length() > 30)
 					 st2.setString(1, profname.substring(0, 29));
@@ -138,7 +138,11 @@ public class Database {
 					 st2.setString(1, profname);
 				 st2.setString(2, profList.get(key));
 
-				 st2.execute();
+				 try {
+					 st2.execute();
+				 } catch (Exception e) {
+					 // do nothing
+				 }
 			 }
 		}
 		
@@ -219,6 +223,7 @@ public class Database {
 			sb.append("<table border=\"1\">");
 			
 			sb.append("<tr>");
+			sb.append("<td>ID</td>");
 			sb.append("<td>Title</td>");
 			sb.append("<td>Course Link</td>");
 			sb.append("<td>Start Date</td>");
@@ -258,8 +263,10 @@ public class Database {
 					 String language = rs.getString("language");
 					 String certificate = rs.getString("certificate");
 					 Date time_scraped = rs.getDate("time_scraped");
+					 int id = rs.getInt("id");
 					 
 					 sb.append("<tr>");
+					 sb.append("<td>" + id + "</td>");
 					 sb.append("<td>" + title + "</td>");
 					 sb.append("<td><a href='" + course_link + "'>" + course_link + "</a></td>");
 					 sb.append("<td>" + start_date + "</td>");
@@ -306,6 +313,7 @@ public class Database {
 			sb2.append("<tr>");
 			sb2.append("<td>Instructor</td>");
 			sb2.append("<td>Instructor Image</td>");
+			sb2.append("<td>Course ID</td>");
 			sb2.append("</tr>\n");
 			
 			PreparedStatement query2 = null;
@@ -317,10 +325,12 @@ public class Database {
 				{					 
 					 String profName = rs2.getString("profname");
 					 String profImage = rs2.getString("profimage");
+					 int course_id = rs2.getInt("course_id");
 					 
 					 sb2.append("<tr>");
 					 sb2.append("<td>" + profName + "</td>");
 					 sb2.append("<td><img src='" + profImage + "' height='60' width='70'></td>");
+					 sb2.append("<td>" + course_id + "</td>");
 					 sb2.append("</tr>\n");
 				}
 			} catch (Exception e) {
@@ -352,9 +362,9 @@ public class Database {
 			 String sqlStatement1 = "DELETE FROM course_data WHERE id > -1";
 			 String sqlStatement2 = "DELETE FROM coursedetails WHERE id > -1";
 			 try {
-				 st = Database.getConnection().prepareStatement(sqlStatement1);
-				 st.execute();
 				 st = Database.getConnection().prepareStatement(sqlStatement2);
+				 st.execute();
+				 st = Database.getConnection().prepareStatement(sqlStatement1);
 				 st.execute();
 			 } catch (Exception e) {
 				 e.printStackTrace();
