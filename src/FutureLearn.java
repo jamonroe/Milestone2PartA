@@ -94,27 +94,27 @@ public class FutureLearn {
 			/* Course Page */
 			/*             */
 			/* *********** */
+
+			// profimage.
+			// FutureLearn has only 1 image for all professors
+			Elements educator_imgs = course_page
+					.select("div[class=educator]")
+					.select("img");
+			String profimage = "http:" + educator_imgs.attr("src");
 			
 			// instructor.
-			// TODO fix this for the new system
 			Elements teachers = course_page
 					.select("div[class=course-educators clearfix]")
 					.select("div[class=small]")
 					.select("a");
 			
-			String instructors = "";
+			HashMap<String, String> professors = new HashMap<String, String>();
 			for (int j = 0; j < teachers.size(); j++) {
-				instructors += teachers.get(j).text();
-				if (j != teachers.size() - 1)
-					instructors += ", ";
+				String[] teacherList = teachers.get(j).text().split(", ");
+				for (String s : teacherList)
+					professors.put(s, profimage);
 			}
-			new_course.setProfName(instructors);
-			
-			// profimage.
-			Elements educator_imgs = course_page
-					.select("div[class=educator]")
-					.select("img");
-			new_course.setProfImage("http:" + educator_imgs.attr("src"));
+			new_course.setProfessors(professors);
 			
 			// title.
 			String course_title = course_header

@@ -434,8 +434,10 @@ public class Course {
 		if (university == null)
 			university = "N/A";
 		
-		if (professors == null)
-			professors.put("N/A", "N/A");
+		if (professors == null) {
+			professors = new HashMap<String, String>();
+			//professors.put("N/A", "N/A");
+		}
 		
 		if (course_link == null)
 			course_link = "N/A";

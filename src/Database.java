@@ -113,7 +113,10 @@ public class Database {
 					 return;
 				 }
 				 
-				 st2.setString(1, key);
+				 if (key.length() > 30)
+					 st2.setString(1, key.substring(0, 29));
+				 else
+					 st2.setString(1, key);
 				 st2.setString(2, profList.get(key));
 				 
 				 st2.execute();

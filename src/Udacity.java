@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -65,29 +66,28 @@ public class Udacity {
 			
 			Pattern p = Pattern.compile("(?<=').*(?=')");
 			Matcher m;
-			String instructors = "", instructor_comma = "", university = "", university_comma = "", image_link;
-			Elements teacherTest;		
+			String prof, image_link;
+			Elements teacherTest;	
+			HashMap<String, String> professors = new HashMap<String, String>();
 			for (Element e : instructor) {
 				teacherTest = e.children().select("div[class=pretty-format]");
+				prof = e.children().select("h3[class=h-slim]").text();
+				
 				// Test if the instructor is a teacher or a university
 				if (teacherTest.size()>0) {
-					instructors += instructor_comma + e.children().select("h3[class=h-slim]").text();
-					instructor_comma = ", ";
-					
 					// profimage
 					image_link = e.children().select("img[class=img-circle instructor-picture]").attr("data-ng-src");
 					m = p.matcher(image_link);
 					if (m.find()) {
-						course.setProfImage("http:" + m.group());
+						professors.put(prof, "http:" + m.group());
+					} else {
+						professors.put(prof, "N/A");
 					}
-					
 				} else {
-					university += university_comma + e.children().select("h3[class=h-slim]").text();
-					university_comma = ", ";
+					course.setUniversity(prof);
 				}
 			}
-			if (!instructors.equals("")) course.setProfName(instructors);
-			if (!university.equals("")) course.setUniversity(university);
+			course.setProfessors(professors);
 			
 			// course_length.
 			// <!-- Duration -->
