@@ -95,6 +95,21 @@ public class Database {
 			 
 			 st.execute();	
 			 
+			 ////////////////////////////////////////////////////////////////////////////////////////
+			 
+			 PreparedStatement st3 = null;
+			 String sqlQuery3 = 
+					 "SET @temp = LAST_INSERT_ID()";
+			 try {
+				 st3 = Database.getConnection().prepareStatement(sqlQuery3);
+			 } catch (Exception e) {
+				 e.printStackTrace();
+				 return;
+			 }
+			 
+			 st3.execute();
+			 
+			 ////////////////////////////////////////////////////////////////////////////////////////
 			 
 			 // For each professor in the course, add the name and image to the database.
 			 HashMap<String, String> profList = course.getProfessors();
@@ -103,8 +118,8 @@ public class Database {
 				 PreparedStatement st2 = null;
 				 String sqlQuery2 = 
 						 "INSERT INTO coursedetails "
-								 + "(profname, profimage) "
-								 + "VALUES (?, ?)";
+								 + "(profname, profimage, course_id) "
+								 + "VALUES (?, ?, @temp)";
 				 
 				 try {
 					 st2 = Database.getConnection().prepareStatement(sqlQuery2);

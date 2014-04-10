@@ -167,14 +167,6 @@ public class Course {
 	}
 	
 	/**
-	  Sets the course ID.
-	  @param courseID the ID
-	 */
-	public void setCourseID(int courseID){
-		course_id = courseID;
-	}
-	
-	/**
 	  Sets the course ID
 	  @param courseId the id
 	 */
