@@ -97,10 +97,11 @@ public class Udacity {
 			String text = duration.get(0).text();
 			
 			// Use regex to find the approx. months
+			// I've estimated the weeks in a month by multiplying by 4
 			p = Pattern.compile("[0-9]");
 			m = p.matcher(text);
 			if (m.find()) {
-				course.setCourseLength(Integer.parseInt(m.group()));
+				course.setCourseLength(Integer.parseInt(m.group())*4);
 			}
 
 			// video_link.
