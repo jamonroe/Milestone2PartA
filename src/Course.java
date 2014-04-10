@@ -10,8 +10,7 @@ import java.util.HashMap;
 public class Course {
 	
 	private HashMap<String, String> professors;
-	private int course_id;
-	
+	private int course_id;	
 	private int id;
 	private String title;
 	private String short_desc;

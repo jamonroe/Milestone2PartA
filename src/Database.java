@@ -96,7 +96,7 @@ public class Database {
 			 st.execute();	
 			 
 			 
-			 // For each professor in the course, add the name and image to the db.
+			 // For each professor in the course, add the name and image to the database.
 			 HashMap<String, String> profList = course.getProfessors();
 			 for (String key : profList.keySet()){			 
 				 
