@@ -1,6 +1,8 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -59,8 +61,9 @@ public class Database {
 		/**
 		  Inserts a course into the database.
 		  @param course the course to be added (course id not needed)
+		 * @throws UnsupportedEncodingException 
 		 */
-		public static void insertCourse(Course course) throws SQLException
+		public static void insertCourse(Course course) throws SQLException, UnsupportedEncodingException
 		{
 			 PreparedStatement st = null;
 			 String sqlQuery =
@@ -112,13 +115,14 @@ public class Database {
 					 e.printStackTrace();
 					 return;
 				 }
-				 
-				 if (key.length() > 30)
-					 st2.setString(1, key.substring(0, 29));
+				 // This isn't helping
+				 String profname = new String(key.getBytes(), Charset.forName("UTF-8"));
+				 if (profname.length() > 30)
+					 st2.setString(1, profname.substring(0, 29));
 				 else
-					 st2.setString(1, key);
+					 st2.setString(1, profname);
 				 st2.setString(2, profList.get(key));
-				 
+
 				 st2.execute();
 			 }
 		}

@@ -110,7 +110,7 @@ public class FutureLearn {
 			
 			HashMap<String, String> professors = new HashMap<String, String>();
 			for (int j = 0; j < teachers.size(); j++) {
-				String[] teacherList = teachers.get(j).text().split(", ");
+				String[] teacherList = teachers.get(j).text().split("(, )|( & )|( and )");
 				for (String s : teacherList)
 					professors.put(s, profimage);
 			}
