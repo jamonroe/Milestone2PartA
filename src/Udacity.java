@@ -92,8 +92,8 @@ public class Udacity {
 			// course_length.
 			// <!-- Duration -->
 			Elements duration = doc
-					.select("div[class=col-md-3 duration-information]")
-					.select("p");
+					.select("div[class=col-md-12 duration-information]")
+					.select("span");
 			String text = duration.get(0).text();
 			
 			// Use regex to find the approx. months

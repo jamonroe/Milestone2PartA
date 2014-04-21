@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 public class FutureLearn {
 
 	public static String URL = "https://www.futurelearn.com";
-	public static String courseURL = "https://www.futurelearn.com/courses";
+	public static String courseURL = "https://www.futurelearn.com/courses/upcoming";
 	
 	public static void main(String[] args) {
 		fetchCourses();

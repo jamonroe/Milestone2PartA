@@ -20,15 +20,19 @@ public class Database {
 	
 	   // JDBC driver name and database URL
 	   static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-	   //Default port number
-	   //static final String DB_URL = "jdbc:mysql://www.sjsu-cs.org/cs160/2014spring/sec2group2/phpmyadmin:3306/";
-	   //static final String DB_URL = "jdbc:mysql://69.89.31.134:3306/";
-	   static final String DB_URL = "jdbc:mysql://localhost:3306/";
 	   
-	   //  Database credentials
+	   // Local database credentials
+	   static final String DB_URL = "jdbc:mysql://localhost:3306/";
 	   static final String DATABASE = "moocs160";
 	   static final String USER = "demo";
 	   static final String PASS = "passwort";
+	   
+	   // Server database credentials
+//	   static final String DB_URL = "jdbc:mysql://www.sjsu-cs.org/cs160/2014spring/sec2group2/phpmyadmin:3306/";
+//	   static final String DATABASE = "sjsucsor_160s2g22014s";
+//	   static final String USER = "sjsucsor_s2g214s";
+//	   static final String PASS = "CourseCampDB";
+	   
 	   private static Connection conn = null;
 
 	   /**
@@ -253,8 +257,12 @@ public class Database {
 					 Date start_date = rs.getDate("start_date");
 					 int course_length = rs.getInt("course_length");
 					 String university = rs.getString("university");
-					 String short_desc = rs.getString("short_desc").substring(0, 30) + "...";
-					 String long_desc = rs.getString("long_desc").substring(0, 30) + "...";
+					 String short_desc = rs.getString("short_desc");
+					 if (short_desc.length() > 30)
+						 short_desc = short_desc.substring(0, 30) + "...";
+					 String long_desc = rs.getString("long_desc");
+					 if (long_desc.length() > 30) 
+						 long_desc = long_desc.substring(0, 30) + "...";
 					 String video_link = rs.getString("video_link");
 					 String course_image = rs.getString("course_image");
 					 String category = rs.getString("category");
@@ -385,11 +393,31 @@ public class Database {
 		}
 		
 		public static boolean testConnection() {
+			System.out.println("Testing connection...");
+			Boolean flag = true;
+			Thread t = new Thread(new Runnable() {
+				public void run() {
+					while (true) {
+						try {
+							Thread.sleep(1500);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						System.out.println("...");
+					}
+				}
+			});
+			t.start();
 			try {
 				 Database.getConnection();
+				 t.stop();
+				 System.out.println("Connection successful.");
 				 return true;
 			 } catch (Exception e) {
-				 e.printStackTrace();
+				 t.stop();
+				 System.out.println("Connection failed.");
+				 System.out.println(e.getMessage());
 				 return false;
 			 }
 		}
