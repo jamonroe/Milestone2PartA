@@ -86,7 +86,7 @@ public class FutureLearn {
 			// image.
 			String image = doc
 					.select("ul[class=list course-index]")
-					.select("img").get(i).attr("src");
+					.select("a[class=media_image").get(i).child(0).attr("src");
 			new_course.setCourseImage(image);
 
 			/* *********** */

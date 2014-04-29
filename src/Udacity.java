@@ -54,37 +54,30 @@ public class Udacity {
 			
 			// long_desc.
 			// <!-- Left Column With Enrollment Buttons and Course Information -->
-			Elements courseInfo = doc.select("div[class=col-md-8 col-md-offset-2]");
+			Elements courseInfo = doc.select("div[class=col-md-12]");
 			Elements courseSummary = courseInfo.select("div[class=pretty-format]");
 			course.setLongDescription(courseSummary.text());
 			
 			// profname and university.
-			// TODO update this for new model
 			Elements instructor = doc
-					.select("div[class=row row-gap-medium instructor-information-entry]")
-					.select("div[class=col-md-6 instructor-information pull-left]");
+					.select("div[class=row instructor-information-entry]")
+					.select("div[class=col-md-12 instructor-information]");
 			
 			Pattern p = Pattern.compile("(?<=').*(?=')");
 			Matcher m;
 			String prof, image_link;
-			Elements teacherTest;	
 			HashMap<String, String> professors = new HashMap<String, String>();
 			for (Element e : instructor) {
-				teacherTest = e.children().select("div[class=pretty-format]");
+				// profname
 				prof = e.children().select("h3[class=h-slim]").text();
 				
-				// Test if the instructor is a teacher or a university
-				if (teacherTest.size()>0) {
-					// profimage
-					image_link = e.children().select("img[class=img-circle instructor-picture]").attr("data-ng-src");
-					m = p.matcher(image_link);
-					if (m.find()) {
-						professors.put(prof, "http:" + m.group());
-					} else {
-						professors.put(prof, "N/A");
-					}
+				// profimage
+				image_link = e.children().select("img[class=img-circle instructor-picture]").attr("data-ng-src");
+				m = p.matcher(image_link);
+				if (m.find()) {
+					professors.put(prof, "http:" + m.group());
 				} else {
-					course.setUniversity(prof);
+					professors.put(prof, "N/A");
 				}
 			}
 			course.setProfessors(professors);
