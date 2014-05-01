@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 
 public class Udacity {
 	
+	public static String SITE = "Udacity";
 	public static String URL = "https://www.udacity.com";
 	public static String CATALOG = "https://www.udacity.com/courses#!/All";
 	public static String courseURL = "http://www.udacity.com/course/";
@@ -40,13 +41,13 @@ public class Udacity {
 				doc = Jsoup.connect(course.getCourseLink()).get();
 				System.out.println("Connected to " + course.getCourseLink());
 			} catch (Exception e) {
-				System.out.println("Could not connect to " + courseURL + course.getCourseLink());
+				System.out.println("Could not connect to " + course.getCourseLink());
 				iterator.remove();
 				continue;
 			}
 			
 			// site.
-			course.setSite(URL);
+			course.setSite(SITE);
 			
 			// title.
 			Elements title = doc.select("title");
@@ -54,9 +55,9 @@ public class Udacity {
 			
 			// long_desc.
 			// <!-- Left Column With Enrollment Buttons and Course Information -->
-			Elements courseInfo = doc.select("div[class=col-md-12]");
+			Elements courseInfo = doc.select("div[class=col-md-8 col-md-offset-2]");
 			Elements courseSummary = courseInfo.select("div[class=pretty-format]");
-			course.setLongDescription(courseSummary.text());
+			course.setLongDescription(courseSummary.get(1).text());
 			
 			// profname and university.
 			Elements instructor = doc
@@ -84,10 +85,11 @@ public class Udacity {
 			
 			// course_length.
 			// <!-- Duration -->
+			String text;
 			Elements duration = doc
-					.select("div[class=col-md-12 duration-information]")
-					.select("span");
-			String text = duration.get(0).text();
+					.select("div[class*=duration-information]")
+					.select("div[class=col-md-10");
+			text = duration.get(0).text();
 			
 			// Use regex to find the approx. months
 			// I've estimated the weeks in a month by multiplying by 4

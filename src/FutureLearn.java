@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 
 public class FutureLearn {
 
+	public static String SITE = "FutureLearn";
 	public static String URL = "https://www.futurelearn.com";
 	public static String courseURL = "https://www.futurelearn.com/courses/upcoming";
 	
@@ -48,7 +49,7 @@ public class FutureLearn {
 			Course new_course = new Course();
 
 			// Set site name
-			new_course.setSite(URL);
+			new_course.setSite(SITE);
 			
 			// course link.
 			String course_link = URL + link.get(i).attr("href");
