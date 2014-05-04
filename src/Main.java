@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * @author: Christy and Thinh and Jason
  */
 
-public class Test {
+public class Main {
 
 	public static void main(String[] args) throws SQLException, IOException {
 	
